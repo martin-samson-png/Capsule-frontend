@@ -7,7 +7,8 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss()],
   },
-  modules: ["@nuxtjs/supabase"],
+  modules: ["@nuxtjs/supabase", "nuxt-lucide-icons"],
+  lucide: { namePrefix: "Icon" },
   supabase: {
     url: process.env.SUPABASE_URL,
     key: process.env.SUPABASE_KEY,
@@ -28,5 +29,8 @@ export default defineNuxtConfig({
         persistSession: true,
       },
     },
+  },
+  runtimeConfig: {
+    public: { backendUrl: process.env.BACKEND_URL },
   },
 });

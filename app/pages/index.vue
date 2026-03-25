@@ -1,1 +1,1 @@
-<template><h1>Bonjour</h1></template>
+<template><h1 class="">Bonjour</h1></template>
