@@ -1,5 +1,8 @@
 export interface Profile {
   id: string;
+  display_name: string;
+  avatar_url: string;
+  created_at: string;
 }
 
 export const useProfile = () => {
@@ -18,7 +21,6 @@ export const useProfile = () => {
       });
 
       profile.value = data;
-      console.log(profile.value);
 
       return data;
     } catch (err) {

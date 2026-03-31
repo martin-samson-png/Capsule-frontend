@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { LoginFormInterface } from "~/types/forms";
-import FormInput from "./FormInput.vue";
+import BaseInput from "../BaseInput.vue";
 
 const props = defineProps<{ modelValue: LoginFormInterface }>();
 
@@ -14,13 +14,13 @@ const model = computed<LoginFormInterface>({
 
 <template>
   <div class="flex flex-col gap-5 w-full">
-    <FormInput
+    <BaseInput
       id="email"
       label="Email"
       placeholder="jhondoe@exemple.com"
       v-model="model.email"
     />
-    <FormInput
+    <BaseInput
       id="password"
       label="Mot de passe"
       type="password"

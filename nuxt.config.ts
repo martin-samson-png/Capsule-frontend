@@ -6,6 +6,19 @@ export default defineNuxtConfig({
   css: ["./app/assets/styles/main.css"],
   vite: {
     plugins: [tailwindcss()],
+    optimizeDeps: {
+      include: [
+        "reka-ui",
+        "@vueuse/core",
+        "clsx",
+        "tailwind-merge",
+        "@vue/devtools-core",
+        "@vue/devtools-kit",
+        "@internationalized/date",
+        "reka-ui/date",
+        "lucide-vue-next",
+      ],
+    },
   },
   modules: ["@nuxtjs/supabase", "nuxt-lucide-icons"],
   lucide: { namePrefix: "Icon" },

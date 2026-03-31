@@ -1,55 +1,32 @@
 <script setup lang="ts">
-import {
-  IconHome,
-  IconChartPie,
-  IconArrowLeftRight,
-  IconGoal,
-} from "#components";
+import { navItems } from "~/constant/navigation";
+
 const props = defineProps<{ open: boolean }>();
 
-const emit = defineEmits(["close"]);
-
-const navItems = [
-  { label: "Acceuil", to: "/dashboard", icon: IconHome },
-  { label: "Graphique", to: "/charts", icon: IconChartPie },
-  { label: "Transactions", to: "transactions", icon: IconArrowLeftRight },
-  { label: "Objectifs", to: "/goals", icon: IconGoal },
-];
+const route = useRoute();
 </script>
 
 <template>
   <aside
-    class="bg-red-800 fixed max-h-screen h-full left-0 z-50 w-3/5 max-w-xs md:max-w-50 transform transition-transform px-3 py-5"
+    class="fixed max-h-screen h-full left-0 min-w-72 transform transition-transform px-3 bg-[#fbfdff] md:translate-x-0"
     :class="open ? 'translate-x-0' : '-translate-x-full'"
   >
     <div class="h-full flex flex-col justify-between">
-      <div class="space-y-5">
-        <button
-          type="button"
-          aria-label="Fermer le menu"
-          class="md:hidden mx-2"
-          @click="emit('close')"
+      <nav class="py-2 md:flex flex-col md:justify-center space-y-7 w-full">
+        <NuxtLink
+          v-for="item in navItems"
+          :key="item.to"
+          :to="item.to"
+          :class="[
+            'flex items-center gap-5 rounded-4xl min-h-16 flex px-5',
+            route.path === item.to ? 'bg-[#3E63DD] text-[#D6E1FF]' : '',
+          ]"
+          ><component :is="item.icon" :size="28" /><span
+            class="font-semibold"
+            >{{ item.label }}</span
+          ></NuxtLink
         >
-          <IconX :size="28" />
-        </button>
-
-        <nav class="py-2 md:flex md:justify-center">
-          <ul class="space-y-7 w-full">
-            <li
-              v-for="nav in navItems"
-              :key="nav.to"
-              class="bg-blue-200 rounded-4xl min-h-12 flex px-2"
-            >
-              <NuxtLink :to="nav.to" class="flex items-center gap-5"
-                ><component :is="nav.icon" :size="28" /><span
-                  class="font-semibold"
-                  >{{ nav.label }}</span
-                ></NuxtLink
-              >
-            </li>
-          </ul>
-        </nav>
-      </div>
+      </nav>
     </div>
   </aside>
 </template>

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { RegisterFormInterface } from "~/types/forms";
-import FormInput from "./FormInput.vue";
+import BaseInput from "../BaseInput.vue";
 
 const props = defineProps<{
   modelValue: RegisterFormInterface & { confirmPassword: string };
@@ -16,25 +16,25 @@ const model = computed<RegisterFormInterface & { confirmPassword: string }>({
 
 <template>
   <div class="flex flex-col gap-5 w-full">
-    <FormInput
+    <BaseInputt
       id="username"
       label="Nom d’utilisateur"
       placeholder="Choisissez un nom d’utilisateur"
       v-model="model.username"
     />
-    <FormInput
+    <BaseInput
       id="email"
       label="Email"
       placeholder="jhondoe@exemple.com"
       v-model="model.email"
     />
-    <FormInput
+    <BaseInput
       id="password"
       label="Mot de passe"
       type="password"
       v-model="model.password"
     />
-    <FormInput
+    <BaseInput
       id="confirmPassword"
       label="Confirmer le mot de passe"
       type="password"

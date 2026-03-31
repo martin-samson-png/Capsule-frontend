@@ -1,21 +1,36 @@
 <script setup lang="ts">
 import AppDrawer from "~/components/layout/AppDrawer.vue";
 import AppHeader from "~/components/layout/AppHeader.vue";
+import ContextBar from "~/components/layout/ContextBar.vue";
+import { navItems } from "~/constant/navigation";
+import { IconHome } from "#components";
+
+const route = useRoute();
+
+const currentNavItem = computed(() =>
+  navItems.find((i) => i.to === route.path),
+);
+
+const pageContext = computed(() => {
+  const title = currentNavItem.value?.label ?? "Page";
+  const icon = currentNavItem.value?.icon ?? IconHome;
+
+  return { title, icon };
+});
 
 const isDrawerOpen = ref(true);
 
 const toggleDrawer = () => {
   isDrawerOpen.value = !isDrawerOpen.value;
 };
-
-const closeDrawer = () => {
-  isDrawerOpen.value = false;
-};
 </script>
 <template>
-  <AppHeader @toggle-drawer="toggleDrawer" />
-  <AppDrawer class="md:mt-16" @close="closeDrawer" :open="isDrawerOpen" />
-  <main class="pt-14 md:pt-16 px-4 md:px-30 lg:px-8 bg-[#EDF2FE]">
-    <slot></slot>
+  <AppHeader @toggle-drawer="toggleDrawer" :open="isDrawerOpen" />
+  <AppDrawer class="pt-18 md:pt-20" :open="isDrawerOpen" />
+  <main class="pt-18 md:pt-20 md:pl-72 bg-[#edf2fe] min-h-screen">
+    <ContextBar :context="pageContext" />
+    <div class="px-4 md:px-6 lg:px-8">
+      <slot />
+    </div>
   </main>
 </template>

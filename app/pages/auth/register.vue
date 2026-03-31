@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import RegisterForm from "~/components/ui/RegisterForm.vue";
+import RegisterForm from "~/components/ui/form/RegisterForm.vue";
 import { useAuth } from "~/composable/useAuth";
 import type { RegisterFormInterface } from "~/types/forms";
+
+definePageMeta({ layout: "auth" });
 
 const { register } = useAuth();
 

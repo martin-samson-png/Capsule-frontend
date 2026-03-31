@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import LoginForm from "~/components/ui/LoginForm.vue";
+import LoginForm from "~/components/ui/form/LoginForm.vue";
 import { useAuth } from "~/composable/useAuth";
 import type { LoginFormInterface } from "~/types/forms";
+
+definePageMeta({ layout: "auth" });
 
 const { login } = useAuth();
 const backendError = ref("");

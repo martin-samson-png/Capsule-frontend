@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { useProfile } from "~/composable/useProfile";
 
+definePageMeta({ layout: "auth" });
+
 const user = useSupabaseUser();
 const supabase = useSupabaseClient();
 const redirectInfo = useSupabaseCookieRedirect();
