@@ -1,29 +1,27 @@
-import type { TransactionFilters } from "~/types/transactions";
+import type {
+  Transaction,
+  TransactionFilters,
+  TransactionsResponse,
+} from "~/types/transactions";
+import { useAuth } from "./useAuth";
 
-export interface Transaction {
-  id: string;
-  date: string;
-  amount_cents: number;
-  label: string;
-  created_at: string;
-  type: "expense" | "income" | "transfer" | "contribution";
-}
-
-export interface TransactionsResponse {
-  data: Transaction[];
-  hasMore: boolean;
-}
+const { getAccessToken } = useAuth();
 
 export const useTransactions = () => {
   const config = useRuntimeConfig();
-  const supabase = useSupabaseClient();
 
   const filters = useState<TransactionFilters>("transactions-filter", () => ({
     from: "",
     to: "",
     type: "",
-    sortOrder: "desc",
+    sortOrder: "",
+    accountId: "",
   }));
+
+  const isModalOpen = useState<boolean>(
+    "transaction-create-modal",
+    () => false,
+  );
 
   const transactions = ref<Transaction[]>([]);
   const hasMore = ref(false);
@@ -35,31 +33,19 @@ export const useTransactions = () => {
     error.value = null;
 
     try {
-      const { data: sessionData, error: sessionError } =
-        await supabase.auth.getSession();
+      const accessToken = await getAccessToken();
 
-      if (sessionError) {
-        throw new Error(sessionError.message);
-      }
-
-      const accessToken = sessionData.session?.access_token;
-
-      if (!accessToken) {
-        throw new Error("Utilisateur non authentifié");
-      }
-      const res = await $fetch<TransactionsResponse>(
-        "/api/transaction/eedef3d3-b686-461b-bd55-138cf6f61935",
-        {
-          baseURL: config.public.backendUrl,
-          query: {
-            from: filters.value.from || undefined,
-            to: filters.value.to || undefined,
-            type: filters.value.type || undefined,
-            sortOrder: filters.value.sortOrder || undefined,
-          },
-          headers: { Authorization: `Bearer ${accessToken}` },
+      const res = await $fetch<TransactionsResponse>("/api/transaction/", {
+        method: "GET",
+        baseURL: config.public.backendUrl,
+        query: {
+          from: filters.value.from || undefined,
+          to: filters.value.to || undefined,
+          type: filters.value.type || undefined,
+          sortOrder: filters.value.sortOrder || undefined,
         },
-      );
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
 
       transactions.value = res.data;
       hasMore.value = res.hasMore;
@@ -72,6 +58,7 @@ export const useTransactions = () => {
 
   return {
     filters,
+    isModalOpen,
     transactions,
     loading,
     error,

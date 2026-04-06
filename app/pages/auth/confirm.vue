@@ -1,13 +1,14 @@
 <script setup lang="ts">
+import { useAuth } from "~/composable/useAuth";
 import { useProfile } from "~/composable/useProfile";
 
 definePageMeta({ layout: "auth" });
 
 const user = useSupabaseUser();
-const supabase = useSupabaseClient();
 const redirectInfo = useSupabaseCookieRedirect();
 
 const { fetchProfile, clearProfile } = useProfile();
+const { getAccessToken } = useAuth();
 
 const backendError = ref("");
 const loading = ref(true);
@@ -18,13 +19,7 @@ watch(
     if (!user.value) return;
 
     try {
-      const { data, error } = await supabase.auth.getSession();
-      if (error) {
-        backendError.value = error.message;
-        return;
-      }
-
-      const accessToken = data.session?.access_token;
+      const accessToken = await getAccessToken();
       if (!accessToken) {
         clearProfile();
         await navigateTo("/auth/login");

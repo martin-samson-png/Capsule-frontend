@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { useProfile } from "~/composable/useProfile";
 
+const { profile } = useProfile();
+
 const props = defineProps<{ open: boolean }>();
 
 const emit = defineEmits(["toggleDrawer"]);
-
-const { profile } = useProfile();
 
 const colors = [
   "#FECACA",

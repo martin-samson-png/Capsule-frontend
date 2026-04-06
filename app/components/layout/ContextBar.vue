@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Component } from "vue";
-import TransactionsFilter from "../ui/filter/TransactionsFilter.vue";
+import TransactionsFilter from "../ui/transactions/TransactionsFilter.vue";
 
 defineProps<{ context: { title: string; icon: Component } }>();
 </script>

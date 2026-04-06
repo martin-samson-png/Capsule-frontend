@@ -6,7 +6,7 @@ import {
 } from "#components";
 import type { Component } from "vue";
 
-type FilterKey = "chartsFilter" | "transactionsFilter" | "goalsFilter" | null;
+type FilterKey = "chartsFilter" | "addTransactionButton" | "goalsFilter" | null;
 
 type NavItem = {
   label: string;
@@ -27,7 +27,7 @@ export const navItems: NavItem[] = [
     label: "Transactions",
     to: "/transactions",
     icon: IconArrowLeftRight,
-    filter: "transactionsFilter",
+    filter: "addTransactionButton",
   },
   { label: "Objectifs", to: "/goals", icon: IconGoal, filter: "goalsFilter" },
 ];

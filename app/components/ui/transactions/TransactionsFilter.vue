@@ -11,6 +11,7 @@ const filters = useState<TransactionFilters>("transactions-filter", () => ({
   to: "",
   type: "",
   sortOrder: "",
+  accountId: "",
 }));
 
 const selectType = ref<OptionProps[]>([
@@ -24,7 +25,21 @@ const selectSortOrder = ref<OptionProps[]>([
   { value: "desc", label: "Plus récent" },
   { value: "asc", label: "Plus ancien" },
 ]);
+
+const selectAccount = ref<OptionProps[]>([
+  { value: "main", label: "Compte principal" },
+  { value: "savings", label: " Compte épargne" },
+]);
+
 const isFilterOpen = ref(false);
+
+const resetFilter = () => {
+  filters.value.from = "";
+  filters.value.to = "";
+  filters.value.type = "";
+  filters.value.sortOrder = "";
+  filters.value.accountId = "";
+};
 </script>
 
 <template>
@@ -39,7 +54,7 @@ const isFilterOpen = ref(false);
             : 'border-[#1f2d5c] bg-[#fbfdff] text-[#1f2d5c]',
         ]"
       >
-        Ouvrir les filtres
+        {{ isFilterOpen ? "Fermer les filtres" : "Ouvrir les filtres" }}
       </button>
     </PopoverTrigger>
     <PopoverContent class="w-80">
@@ -50,6 +65,12 @@ const isFilterOpen = ref(false);
           v-model="filters.from"
         />
         <BaseDatePicker id="to" label="Date de fin" v-model="filters.to" />
+        <BaseSelect
+          id="account"
+          label="Compte"
+          v-model="filters.accountId"
+          :options="selectAccount"
+        />
         <BaseSelect
           id="type"
           label="Type"
@@ -62,6 +83,7 @@ const isFilterOpen = ref(false);
           v-model="filters.sortOrder"
           :options="selectSortOrder"
         />
+        <button @click="resetFilter" type="button">Reinitialiser</button>
       </div>
     </PopoverContent>
   </Popover>
