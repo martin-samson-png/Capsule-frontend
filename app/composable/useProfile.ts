@@ -31,7 +31,6 @@ export const useProfile = () => {
 
   const clearProfile = () => {
     profile.value = null;
-    console.log(profile.value);
   };
 
   return { profile, fetchProfile, clearProfile };

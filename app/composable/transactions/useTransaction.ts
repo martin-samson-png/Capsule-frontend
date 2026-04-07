@@ -3,11 +3,10 @@ import type {
   TransactionFilters,
   TransactionsResponse,
 } from "~/types/transactions";
-import { useAuth } from "./useAuth";
-
-const { getAccessToken } = useAuth();
+import { useAuth } from "../useAuth";
 
 export const useTransactions = () => {
+  const { getAccessToken } = useAuth();
   const config = useRuntimeConfig();
 
   const filters = useState<TransactionFilters>("transactions-filter", () => ({
@@ -17,11 +16,6 @@ export const useTransactions = () => {
     sortOrder: "",
     accountId: "",
   }));
-
-  const isModalOpen = useState<boolean>(
-    "transaction-create-modal",
-    () => false,
-  );
 
   const transactions = ref<Transaction[]>([]);
   const hasMore = ref(false);
@@ -49,8 +43,8 @@ export const useTransactions = () => {
 
       transactions.value = res.data;
       hasMore.value = res.hasMore;
-    } catch (err: any) {
-      error.value = err.message;
+    } catch (err) {
+      error.value = getErrorMessage(err);
     } finally {
       loading.value = false;
     }
@@ -58,7 +52,6 @@ export const useTransactions = () => {
 
   return {
     filters,
-    isModalOpen,
     transactions,
     loading,
     error,

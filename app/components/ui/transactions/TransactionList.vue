@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { Transaction } from "~/types/transactions";
+import { formatDateToDayMonthYear } from "~/utils/formatDate";
+import { centsToEuro } from "~/utils/money";
 
 defineProps<{ transactions: Transaction[] }>();
 </script>

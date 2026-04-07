@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useAccounts } from "~/composable/accounts/useAccounts";
+import { useCategories } from "~/composable/categories/useCategories";
 import { useAuth } from "~/composable/useAuth";
 import { useProfile } from "~/composable/useProfile";
 
@@ -8,6 +10,8 @@ const user = useSupabaseUser();
 const redirectInfo = useSupabaseCookieRedirect();
 
 const { fetchProfile, clearProfile } = useProfile();
+const { fetchCategories, categories } = useCategories();
+const { fetchAccounts, accounts } = useAccounts();
 const { getAccessToken } = useAuth();
 
 const backendError = ref("");
@@ -26,7 +30,11 @@ watch(
         return;
       }
 
-      await fetchProfile(accessToken);
+      await Promise.all([
+        fetchProfile(accessToken),
+        fetchCategories(),
+        fetchAccounts(),
+      ]);
 
       const path = redirectInfo.pluck();
       await navigateTo(path || "/dashboard");
@@ -46,5 +54,6 @@ watch(
     <p v-else-if="backendError" class="text-sm text-red-600">
       {{ backendError }}
     </p>
+    {{ categories }}
   </div>
 </template>

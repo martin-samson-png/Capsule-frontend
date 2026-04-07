@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Component } from "vue";
 import TransactionsFilter from "../ui/transactions/TransactionsFilter.vue";
+import AddTransactionButton from "../ui/transactions/AddTransactionButton.vue";
 
 defineProps<{ context: { title: string; icon: Component } }>();
 </script>
@@ -13,6 +14,7 @@ defineProps<{ context: { title: string; icon: Component } }>();
       <h2 class="text-xl md:text-3xl font-semibold">{{ context.title }}</h2>
     </div>
     <div class="md:w-1/6 h-full flex justify-end items-center">
+      <AddTransactionButton />
       <TransactionsFilter />
     </div>
   </header>
