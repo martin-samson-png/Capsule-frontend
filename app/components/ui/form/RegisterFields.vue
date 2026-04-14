@@ -16,7 +16,7 @@ const model = computed<RegisterFormInterface & { confirmPassword: string }>({
 
 <template>
   <div class="flex flex-col gap-5 w-full">
-    <BaseInputt
+    <BaseInput
       id="username"
       label="Nom d’utilisateur"
       placeholder="Choisissez un nom d’utilisateur"

@@ -9,12 +9,12 @@ export const useCategories = () => {
   const loading = ref(false);
   const error = ref<string | null>(null);
 
-  const fetchCategories = async () => {
+  const fetchCategories = async (providedToken?: string) => {
     loading.value = true;
     error.value = null;
 
     try {
-      const accessToken = await getAccessToken();
+      const accessToken = providedToken || (await getAccessToken());
 
       const res = await $fetch<CategoriesResponse>("/api/category", {
         method: "GET",

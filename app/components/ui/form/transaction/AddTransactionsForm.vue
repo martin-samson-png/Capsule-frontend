@@ -34,7 +34,10 @@ const error = ref<string | null>(null);
         v-if="form.type === 'expense' || form.type === 'income'"
       />
       <TransferFields :modelValue="form" v-else-if="form.type === 'transfer'" />
-      <ContributionFields v-else-if="form.type === 'contribution'" />
+      <ContributionFields
+        :modelValue="form"
+        v-else-if="form.type === 'contribution'"
+      />
     </div>
     <button
       type="submit"

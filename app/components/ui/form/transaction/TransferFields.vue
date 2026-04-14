@@ -34,7 +34,7 @@ const selectCategory = computed<OptionProps[]>(() =>
 <template>
   <BaseSelect
     id="fromAccount"
-    label="Compte sourcer"
+    label="Compte source"
     :options="selectAccounts"
     v-model="modelValue.fromAccountId"
   />

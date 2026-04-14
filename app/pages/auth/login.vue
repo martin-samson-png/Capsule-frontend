@@ -17,7 +17,7 @@ const submit = async (input: LoginFormInterface) => {
       return;
     }
 
-    await navigateTo("/auth/confirm");
+    navigateTo("/auth/confirm");
   } catch (err) {
     backendError.value = getErrorMessage(err);
   }

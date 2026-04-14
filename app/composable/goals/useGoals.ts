@@ -1,27 +1,28 @@
-import type { Account } from "~/types/accounts";
+import type { GoalResponse, Goal } from "~/types/goals";
 import { useAuth } from "../useAuth";
 
-export const useAccounts = () => {
+export const useGoals = () => {
   const { getAccessToken } = useAuth();
   const config = useRuntimeConfig();
 
-  const accounts = useState<Account[]>("accounts", () => []);
+  const goals = useState<Goal[]>("goals", () => []);
   const loading = ref(false);
   const error = ref<string | null>(null);
 
-  const fetchAccounts = async (providedToken?: string) => {
+  const fetchGoals = async (providedToken?: string) => {
     loading.value = true;
     error.value = null;
 
     try {
       const accessToken = providedToken || (await getAccessToken());
 
-      const res = await $fetch<Account[]>("api/profile/accounts", {
+      const res = await $fetch<GoalResponse>("/api/goal", {
         method: "GET",
         baseURL: config.public.backendUrl,
         headers: { Authorization: `Bearer ${accessToken}` },
       });
-      accounts.value = res;
+
+      goals.value = res.data;
     } catch (err) {
       error.value = getErrorMessage(err);
     } finally {
@@ -29,5 +30,5 @@ export const useAccounts = () => {
     }
   };
 
-  return { accounts, loading, error, fetchAccounts };
+  return { goals, loading, error, fetchGoals };
 };

@@ -1,4 +1,5 @@
 import type {
+  CreateTransaction,
   Transaction,
   TransactionFilters,
   TransactionsResponse,
@@ -49,6 +50,8 @@ export const useTransactions = () => {
       loading.value = false;
     }
   };
+
+  const createTransaction = async (data: CreateTransaction) => {};
 
   return {
     filters,

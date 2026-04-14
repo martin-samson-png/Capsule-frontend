@@ -9,7 +9,10 @@ const { filters, transactions, hasMore, loading, error, fetchTransactions } =
 
 const { isModalOpen, closeModal } = useTransactionModal();
 
-onMounted(() => fetchTransactions());
+onMounted(() => {
+  console.log(transactions);
+  fetchTransactions();
+});
 
 watch(
   filters,
