@@ -27,9 +27,9 @@ export interface CreateTransaction {
   date: string;
   amount: number | null;
   label: string;
-  accountId: string;
-  fromAccountId: string;
-  toAccountId: string;
-  categoryId: string;
-  goalId: string;
+  accountId: string | null;
+  fromAccountId: string | null;
+  toAccountId: string | null;
+  categoryId: string | null;
+  goalId: string | null;
 }

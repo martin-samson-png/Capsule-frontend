@@ -51,7 +51,78 @@ export const useTransactions = () => {
     }
   };
 
-  const createTransaction = async (data: CreateTransaction) => {};
+  const validateForm = (form: CreateTransaction) => {
+    if (!form.type) throw new Error("Type obligatoire");
+
+    if (!form.amount || form.amount <= 0) throw new Error("Montant invalide");
+
+    if (!form.label) throw new Error("Libellé obligatoire");
+
+    if (
+      ["expense", "income", "contribution"].includes(form.type) &&
+      !form.accountId
+    )
+      throw new Error("Compte obligatoire");
+
+    if (form.type === "transfer") {
+      if (!form.fromAccountId || !form.toAccountId)
+        throw new Error("Compte obligatoire");
+      if (form.fromAccountId === form.toAccountId)
+        throw new Error(
+          "Le compte source et destination doivent être différents",
+        );
+    }
+
+    if (form.type === "contribution" && !form.goalId)
+      throw new Error("Objectif obligatoire");
+
+    return null;
+  };
+
+  const createTransaction = async (form: CreateTransaction) => {
+    error.value = null;
+
+    const validationError = validateForm(form);
+    if (validationError) {
+      error.value = validationError;
+
+      throw new Error(validationError);
+    }
+    loading.value = true;
+
+    const payload = {
+      ...form,
+      accountId:
+        form.type === "expense" ||
+        form.type === "income" ||
+        form.type === "contribution"
+          ? form.accountId
+          : null,
+      fromAccountId: form.type === "transfer" ? form.fromAccountId : null,
+      toAccountId: form.type === "transfer" ? form.toAccountId : null,
+      categoryId: form.type === "contribution" ? null : form.categoryId || null,
+      goalId: form.type === "contribution" ? form.goalId : null,
+    };
+
+    try {
+      const accessToken = await getAccessToken();
+
+      const res = await $fetch("/api/transaction/create", {
+        method: "POST",
+        body: payload,
+        baseURL: config.public.backendUrl,
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      return res;
+    } catch (err) {
+      const msg = getErrorMessage(err);
+      error.value = msg;
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  };
 
   return {
     filters,
@@ -60,5 +131,6 @@ export const useTransactions = () => {
     error,
     hasMore,
     fetchTransactions,
+    createTransaction,
   };
 };

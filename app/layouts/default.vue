@@ -4,6 +4,7 @@ import AppHeader from "~/components/layout/AppHeader.vue";
 import ContextBar from "~/components/layout/ContextBar.vue";
 import { navItems } from "~/constant/navigation";
 import { IconHome } from "#components";
+import AppToast from "~/components/layout/AppToast.vue";
 
 const route = useRoute();
 
@@ -27,6 +28,7 @@ const toggleDrawer = () => {
 <template>
   <AppHeader @toggle-drawer="toggleDrawer" :open="isDrawerOpen" />
   <AppDrawer class="pt-18 md:pt-20" :open="isDrawerOpen" />
+  <AppToast />
   <main class="pt-18 md:pt-20 md:pl-72 bg-[#edf2fe] min-h-screen">
     <ContextBar :context="pageContext" />
     <div class="px-4 md:px-6 lg:px-8">

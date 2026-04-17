@@ -9,6 +9,10 @@ export const useAccounts = () => {
   const loading = ref(false);
   const error = ref<string | null>(null);
 
+  const mainAccount = computed(() =>
+    accounts.value.find((a) => a.type === "main"),
+  );
+
   const fetchAccounts = async (providedToken?: string) => {
     loading.value = true;
     error.value = null;
@@ -29,5 +33,5 @@ export const useAccounts = () => {
     }
   };
 
-  return { accounts, loading, error, fetchAccounts };
+  return { accounts, loading, error, mainAccount, fetchAccounts };
 };

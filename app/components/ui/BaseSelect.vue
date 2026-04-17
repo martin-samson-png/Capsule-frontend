@@ -7,7 +7,7 @@ defineProps<{
   options: OptionProps[];
 }>();
 
-const model = defineModel<string>({ required: true });
+const model = defineModel<string | null>({ required: true });
 </script>
 
 <template>
