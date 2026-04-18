@@ -51,6 +51,29 @@ export const useTransactions = () => {
     }
   };
 
+  const fetchTransactionsById = async (id: string) => {
+    loading.value = false;
+    error.value = null;
+
+    try {
+      const accessToken = await getAccessToken();
+
+      const res = await $fetch<Transaction>(`api/transaction/${id}`, {
+        method: "GET",
+        baseURL: config.public.backendUrl,
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      return res;
+    } catch (err) {
+      const msg = getErrorMessage(err);
+      error.value = msg;
+      throw msg;
+    } finally {
+      loading.value = false;
+    }
+  };
+
   const validateForm = (form: CreateTransaction) => {
     if (!form.type) throw new Error("Type obligatoire");
 
@@ -119,11 +142,15 @@ export const useTransactions = () => {
     } catch (err) {
       const msg = getErrorMessage(err);
       error.value = msg;
-      throw err;
+      throw msg;
     } finally {
       loading.value = false;
     }
   };
+
+  const updateTransaction = async (id: string, form: CreateTransaction) => {};
+
+  const deleteTransaction = async (id: string) => {};
 
   return {
     filters,
@@ -132,6 +159,9 @@ export const useTransactions = () => {
     error,
     hasMore,
     fetchTransactions,
+    fetchTransactionsById,
     createTransaction,
+    updateTransaction,
+    deleteTransaction,
   };
 };

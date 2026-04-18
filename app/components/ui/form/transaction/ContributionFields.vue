@@ -5,7 +5,7 @@ import type { OptionProps } from "~/types/forms";
 import type { CreateTransaction } from "~/types/transactions";
 import BaseSelect from "../../BaseSelect.vue";
 
-defineProps<{ modelValue: CreateTransaction }>();
+const props = defineProps<{ modelValue: CreateTransaction }>();
 
 const { accounts } = useAccounts();
 const { goals } = useGoals();
@@ -35,12 +35,15 @@ const selectGoal = computed<OptionProps[]>(() => {
 
 <template>
   <BaseSelect
-    id="fromAcount"
+    :key="`acc-${selectAccounts.length}`"
+    id="fromAccount"
     label="Depuis le compte"
     :options="selectAccounts"
     v-model="modelValue.accountId"
   />
+
   <BaseSelect
+    :key="`goal-${selectGoal.length}`"
     id="goal"
     label="Vers l'objectif"
     :options="selectGoal"

@@ -4,13 +4,24 @@ export const useTransactionModal = () => {
     () => false,
   );
 
+  const selectedId = useState<string | null>(
+    "transaction-selected-id",
+    () => null,
+  );
+
   const toggleModal = () => {
     isModalOpen.value = !isModalOpen.value;
   };
 
-  const closeModal = () => {
-    isModalOpen.value = false;
+  const openModal = (id?: string) => {
+    selectedId.value = id || null;
+    isModalOpen.value = true;
   };
 
-  return { isModalOpen, toggleModal, closeModal };
+  const closeModal = () => {
+    isModalOpen.value = false;
+    selectedId.value = null;
+  };
+
+  return { isModalOpen, selectedId, toggleModal, openModal, closeModal };
 };

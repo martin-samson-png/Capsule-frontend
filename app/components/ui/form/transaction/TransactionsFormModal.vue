@@ -10,13 +10,20 @@ import { useToast } from "~/composable/useToast";
 import { useTransactionModal } from "~/composable/transactions/useTransactionModal";
 
 const { mainAccount, fetchAccounts } = useAccounts();
-const { createTransaction, fetchTransactions, loading } = useTransactions();
+const {
+  createTransaction,
+  fetchTransactions,
+  fetchTransactionsById,
+  updateTransaction,
+  deleteTransaction,
+  loading,
+} = useTransactions();
 const { showToast } = useToast();
 const { closeModal } = useTransactionModal();
 
 const getInitialForm = (): CreateTransaction => ({
   type: "",
-  date: new Date().toISOString(),
+  date: formatDateForInput(new Date()),
   amount: null,
   label: "",
   accountId: "",
@@ -25,6 +32,10 @@ const getInitialForm = (): CreateTransaction => ({
   categoryId: "",
   goalId: "",
 });
+
+const props = defineProps<{ transactionId?: string | null }>();
+
+defineEmits(["close"]);
 
 const form = reactive<CreateTransaction>(getInitialForm());
 
@@ -35,7 +46,7 @@ const resetForm = () => {
 watch(
   () => form.type,
   (newType, oldType) => {
-    if (!oldType) {
+    if (!oldType && !props.transactionId) {
       form.accountId = "";
       form.fromAccountId = "";
       form.toAccountId = "";
@@ -50,16 +61,60 @@ watch(
   },
 );
 
+watch(
+  () => props.transactionId,
+  async (newId) => {
+    if (newId) {
+      const data = await fetchTransactionsById(newId);
+
+      Object.assign(form, {
+        ...data,
+        date: formatDateForInput(data.date),
+        amount: data.amountCents / 100,
+      });
+    } else {
+      resetForm();
+    }
+  },
+  { immediate: true },
+);
+
 const handleSubmit = async () => {
   try {
-    const result = await createTransaction(form);
+    let result;
+    if (props.transactionId) {
+      result = await updateTransaction(props.transactionId, form);
+    } else {
+      result = await createTransaction(form);
+    }
 
     if (result) {
-      showToast("Transaction créée avec succès");
+      showToast(
+        props.transactionId
+          ? "Transaction modifiée avec succès"
+          : "Transaction créée avec succès",
+      );
       resetForm();
       await Promise.all([fetchTransactions(), fetchAccounts()]);
       closeModal();
     }
+  } catch (err: unknown) {
+    if (err instanceof Error) showToast(err.message, "error");
+    else showToast("Une erreur inconnue est survenue", "error");
+  }
+};
+
+const handleDelete = async () => {
+  try {
+    if (!props.transactionId) {
+      showToast("jsp");
+      return;
+    }
+    await deleteTransaction(props.transactionId);
+    showToast("Transaction supprimée avec succès");
+    resetForm();
+    await Promise.all([fetchTransactions(), fetchAccounts()]);
+    closeModal();
   } catch (err: unknown) {
     if (err instanceof Error) showToast(err.message, "error");
     else showToast("Une erreur inconnue est survenue", "error");
@@ -72,7 +127,9 @@ const handleSubmit = async () => {
     class="flex flex-col items-center px-5 py-7 w-7/8 gap-5 bg-[#fbfdff] rounded-lg shadow-lg sm:w-2/3 md:w-3/5 lg:w-2/5 xl:w-1/3 max-h-[90vh] overflow-y-auto"
     @submit.prevent="handleSubmit"
   >
-    <h1 class="mb-5 text-3xl font-semibold">Nouvelle Transaction</h1>
+    <h1 class="mb-5 text-3xl font-semibold">
+      {{ transactionId ? "Modifier la transaction" : "Nouvelle Transaction" }}
+    </h1>
 
     <div class="flex flex-col gap-5 w-full">
       <BaseTransactionFields :modelValue="form" />
@@ -96,7 +153,13 @@ const handleSubmit = async () => {
           : 'bg-[#1f2d5c] text-white hover:opacity-90',
       ]"
     >
-      {{ loading ? "Chargement" : "Ajouter" }}
+      {{
+        loading
+          ? "Chargement"
+          : transactionId
+            ? "Enregistrer le modification"
+            : "Créer"
+      }}
     </button>
   </form>
 </template>

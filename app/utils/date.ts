@@ -30,3 +30,8 @@ export const formatDateToDayMonthYear = (dateStr: string): string => {
 
   return `${day} ${monthName} ${year}`;
 };
+
+export const formatDateForInput = (date: string | Date) => {
+  const d = typeof date === "string" ? new Date(date) : date;
+  return d.toISOString().split("T")[0];
+};

@@ -2,9 +2,9 @@ import { useAuth } from "./useAuth";
 
 export interface Profile {
   id: string;
-  display_name: string;
-  avatar_url: string;
-  created_at: string;
+  displayName: string;
+  avatarUrl: string;
+  createdAt: string;
 }
 
 export const useProfile = () => {

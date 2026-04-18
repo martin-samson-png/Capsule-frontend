@@ -3,7 +3,7 @@ export interface Category {
   label: string;
   icon: string;
   color: string;
-  created_at: string;
+  createdAt: string;
 }
 
 export interface CategoriesResponse {

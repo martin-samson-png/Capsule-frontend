@@ -3,9 +3,9 @@ type TransactionType = "expense" | "income" | "transfer" | "contribution";
 export interface Transaction {
   id: string;
   date: string;
-  amount_cents: number;
+  amountCents: number;
   label: string;
-  created_at: string;
+  createdAt: string;
   type: TransactionType;
 }
 
@@ -24,7 +24,7 @@ export type TransactionFilters = {
 
 export interface CreateTransaction {
   type: TransactionType | "";
-  date: string;
+  date?: string;
   amount: number | null;
   label: string;
   accountId?: string;

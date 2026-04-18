@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import AddTransactionModal from "~/components/ui/transactions/AddTransactionModal.vue";
+import TransactionsFormModal from "~/components/ui/form/transaction/TransactionsFormModal.vue";
 import TransactionList from "~/components/ui/transactions/TransactionList.vue";
 import { useTransactions } from "~/composable/transactions/useTransaction";
 import { useTransactionModal } from "~/composable/transactions/useTransactionModal";
@@ -7,7 +7,8 @@ import { useTransactionModal } from "~/composable/transactions/useTransactionMod
 const { filters, transactions, hasMore, loading, error, fetchTransactions } =
   useTransactions();
 
-const { isModalOpen, closeModal } = useTransactionModal();
+const { isModalOpen, selectedId, openModal, closeModal } =
+  useTransactionModal();
 
 onMounted(() => {
   fetchTransactions();
@@ -33,14 +34,17 @@ watch(
     </div>
     <div v-else-if="transactions.length === 0">Aucune transaction trouvée.</div>
     <div v-else>
-      <TransactionList :transactions="transactions" />
+      <TransactionList
+        :transactions="transactions"
+        @select-transaction="openModal"
+      />
     </div>
     <div
       @click.self="closeModal"
       v-show="isModalOpen"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50  p-4"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4"
     >
-      <AddTransactionModal />
+      <TransactionsFormModal :transaction-id="selectedId" @close="closeModal" />
     </div>
     <button v-if="hasMore" class="mt-4" @click="fetchTransactions">
       Charger plus

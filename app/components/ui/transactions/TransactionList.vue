@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import type { Transaction } from "~/types/transactions";
-import { formatDateToDayMonthYear } from "~/utils/formatDate";
+import { formatDateToDayMonthYear } from "~/utils/date";
 import { centsToEuro } from "~/utils/money";
 
 defineProps<{ transactions: Transaction[] }>();
+defineEmits(["select-transaction"]);
 </script>
 
 <template>
@@ -13,6 +14,7 @@ defineProps<{ transactions: Transaction[] }>();
         v-for="tx in transactions"
         :key="tx.id"
         class="flex items-center justify-between px-6 py-4 hover:bg-slate-50 transition"
+        @click="$emit('select-transaction', tx.id)"
       >
         <div class="flex flex-col">
           <span class="font-medium text-[#1f2d5c]">
@@ -33,7 +35,7 @@ defineProps<{ transactions: Transaction[] }>();
                 : 'text-blue-500',
           ]"
         >
-          {{ centsToEuro(tx.amount_cents) }}
+          {{ centsToEuro(tx.amountCents) }}
         </div>
       </li>
     </ul>

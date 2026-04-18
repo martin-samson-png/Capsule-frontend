@@ -14,6 +14,7 @@ const selectCategory = computed<OptionProps[]>(() =>
 
 <template>
   <BaseSelect
+    :key="`cat-${selectCategory.length}`"
     id="category"
     label="Catégorie"
     :options="selectCategory"

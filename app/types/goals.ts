@@ -3,11 +3,11 @@ type GoalStatus = "active" | "completed" | "archived";
 export interface Goal {
   id: string;
   label: string;
-  target_amount_cents: number;
-  current_amount_cents: number;
+  targetAmountCents: number;
+  currentAmountCents: number;
   deadline: string;
   status: GoalStatus;
-  created_at: string;
+  createdAt: string;
 }
 
 export interface GoalResponse {

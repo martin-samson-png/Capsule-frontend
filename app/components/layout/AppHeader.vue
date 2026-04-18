@@ -58,18 +58,18 @@ const getColorFromUsername = (username: string) => {
     >
       <div
         class="flex size-10 items-center justify-center rounded-full text-xl"
-        :style="{ backgroundColor: getColorFromUsername(profile.display_name) }"
+        :style="{ backgroundColor: getColorFromUsername(profile.displayName) }"
       >
         <img
-          v-if="profile.avatar_url"
-          :src="profile.avatar_url"
+          v-if="profile.avatarUrl"
+          :src="profile.avatarUrl"
           alt="avatar du profile"
         />
         <span v-else>{{
-          profile.display_name.split("")[0]?.toUpperCase()
+          profile.displayName.split("")[0]?.toUpperCase()
         }}</span>
       </div>
-      <span class="font-medium text-xl">{{ profile.display_name }}</span>
+      <span class="font-medium text-xl">{{ profile.displayName }}</span>
     </div>
   </header>
 </template>
