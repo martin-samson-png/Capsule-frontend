@@ -10,7 +10,6 @@ const { filters, transactions, hasMore, loading, error, fetchTransactions } =
 const { isModalOpen, closeModal } = useTransactionModal();
 
 onMounted(() => {
-  console.log(transactions);
   fetchTransactions();
 });
 
@@ -39,7 +38,7 @@ watch(
     <div
       @click.self="closeModal"
       v-show="isModalOpen"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-gray-500/50"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50  p-4"
     >
       <AddTransactionModal />
     </div>

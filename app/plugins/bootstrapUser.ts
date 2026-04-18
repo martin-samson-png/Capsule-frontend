@@ -15,7 +15,6 @@ export default defineNuxtPlugin(() => {
   const globalError = useState<string | null>("global-error", () => null);
 
   client.auth.onAuthStateChange(async (event, session) => {
-    console.log("EVENT AUTH DETECTÉ :", event);
     if (session?.user) {
       try {
         loadingUserData.value = true;

@@ -1,6 +1,7 @@
 <script setup lang="ts">
+import { useAccounts } from "~/composable/accounts/useAccounts";
 import { useCategories } from "~/composable/categories/useCategories";
 
-const { categories } = useCategories();
+const { accounts } = useAccounts();
 </script>
-<template>{{ categories }}</template>
+<template>{{ accounts }}</template>

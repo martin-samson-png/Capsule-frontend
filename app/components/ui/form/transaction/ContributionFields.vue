@@ -26,9 +26,11 @@ const selectAccounts = computed<OptionProps[]>(() => [
     : []),
 ]);
 
-const selectGoal = computed<OptionProps[]>(() =>
-  goals.value.map((g) => ({ label: g.label, value: g.id })),
-);
+const selectGoal = computed<OptionProps[]>(() => {
+  return goals.value
+    .filter((g) => g.status === "active")
+    .map((g) => ({ label: g.label, value: g.id }));
+});
 </script>
 
 <template>

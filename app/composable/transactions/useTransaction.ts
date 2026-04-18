@@ -18,7 +18,7 @@ export const useTransactions = () => {
     accountId: "",
   }));
 
-  const transactions = ref<Transaction[]>([]);
+  const transactions = useState<Transaction[]>("transactions", () => []);
   const hasMore = ref(false);
   const loading = ref(false);
   const error = ref<string | null>(null);
@@ -97,11 +97,12 @@ export const useTransactions = () => {
         form.type === "income" ||
         form.type === "contribution"
           ? form.accountId
-          : null,
-      fromAccountId: form.type === "transfer" ? form.fromAccountId : null,
-      toAccountId: form.type === "transfer" ? form.toAccountId : null,
-      categoryId: form.type === "contribution" ? null : form.categoryId || null,
-      goalId: form.type === "contribution" ? form.goalId : null,
+          : undefined,
+      fromAccountId: form.type === "transfer" ? form.fromAccountId : undefined,
+      toAccountId: form.type === "transfer" ? form.toAccountId : undefined,
+      categoryId:
+        form.type === "contribution" ? undefined : form.categoryId || undefined,
+      goalId: form.type === "contribution" ? form.goalId : undefined,
     };
 
     try {

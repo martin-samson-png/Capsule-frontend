@@ -13,7 +13,6 @@ const submit = async (data: RegisterFormInterface) => {
   try {
     const { error } = await register(data);
     if (error) {
-      console.error(error.message);
       backendError.value = error.message;
       return;
     }
