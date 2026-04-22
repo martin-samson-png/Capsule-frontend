@@ -5,7 +5,7 @@ import type {
   TransactionsResponse,
 } from "~/types/transactions";
 import { useAuth } from "../useAuth";
-import { formatPayload, getDirtyValues } from "~/utils/formHelpers";
+import { formatPayload } from "~/utils/formHelpers";
 
 const getCleanPayload = (form: TransactionForm): TransactionForm => {
   return { ...form };
@@ -99,7 +99,7 @@ export const useTransactions = () => {
     } catch (err) {
       const msg = getErrorMessage(err);
       error.value = msg;
-      throw msg;
+      throw new Error(msg);
     } finally {
       loading.value = false;
     }
@@ -146,7 +146,7 @@ export const useTransactions = () => {
     } catch (err) {
       const msg = getErrorMessage(err);
       error.value = msg;
-      throw msg;
+      throw new Error(msg);
     } finally {
       loading.value = false;
     }
@@ -172,10 +172,10 @@ export const useTransactions = () => {
       });
 
       return res;
-    } catch (err) {
+    } catch (err: any) {
       const msg = getErrorMessage(err);
       error.value = msg;
-      throw msg;
+      throw new Error(msg);
     } finally {
       loading.value = false;
     }

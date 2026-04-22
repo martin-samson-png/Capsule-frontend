@@ -1,4 +1,4 @@
-export const getErrorMessage = (err: unknown) => {
+export const getErrorMessage = (err: unknown): string => {
   if (
     typeof err === "object" &&
     err !== null &&
@@ -9,9 +9,7 @@ export const getErrorMessage = (err: unknown) => {
     const data = err.data as { message?: string; error?: string };
     if (data.message) return data.message;
     if (data.error) return data.error;
-  }
-
-  if (err instanceof Error) {
+  } else if (err instanceof Error) {
     return err.message;
   }
   return "Une erreur est survenue, veuillez réessayer.";
