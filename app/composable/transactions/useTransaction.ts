@@ -1,10 +1,41 @@
 import type {
-  CreateTransaction,
+  TransactionForm,
   Transaction,
   TransactionFilters,
   TransactionsResponse,
 } from "~/types/transactions";
 import { useAuth } from "../useAuth";
+import { formatPayload, getDirtyValues } from "~/utils/formHelpers";
+
+const getCleanPayload = (form: TransactionForm): TransactionForm => {
+  return { ...form };
+};
+
+const validateForm = (form: TransactionForm) => {
+  if (!form.type) throw new Error("Type obligatoire");
+
+  if (!form.amount || form.amount <= 0) throw new Error("Montant invalide");
+
+  if (
+    ["expense", "income", "contribution"].includes(form.type) &&
+    !form.accountId
+  )
+    throw new Error("Compte obligatoire");
+
+  if (form.type === "transfer") {
+    if (!form.fromAccountId || !form.toAccountId)
+      throw new Error("Compte obligatoire");
+    if (form.fromAccountId === form.toAccountId)
+      throw new Error(
+        "Le compte source et destination doivent être différents",
+      );
+  }
+
+  if (form.type === "contribution" && !form.goalId)
+    throw new Error("Objectif obligatoire");
+
+  return null;
+};
 
 export const useTransactions = () => {
   const { getAccessToken } = useAuth();
@@ -74,35 +105,7 @@ export const useTransactions = () => {
     }
   };
 
-  const validateForm = (form: CreateTransaction) => {
-    if (!form.type) throw new Error("Type obligatoire");
-
-    if (!form.amount || form.amount <= 0) throw new Error("Montant invalide");
-
-    if (!form.label) throw new Error("Libellé obligatoire");
-
-    if (
-      ["expense", "income", "contribution"].includes(form.type) &&
-      !form.accountId
-    )
-      throw new Error("Compte obligatoire");
-
-    if (form.type === "transfer") {
-      if (!form.fromAccountId || !form.toAccountId)
-        throw new Error("Compte obligatoire");
-      if (form.fromAccountId === form.toAccountId)
-        throw new Error(
-          "Le compte source et destination doivent être différents",
-        );
-    }
-
-    if (form.type === "contribution" && !form.goalId)
-      throw new Error("Objectif obligatoire");
-
-    return null;
-  };
-
-  const createTransaction = async (form: CreateTransaction) => {
+  const createTransaction = async (form: TransactionForm) => {
     error.value = null;
 
     const validationError = validateForm(form);
@@ -115,6 +118,7 @@ export const useTransactions = () => {
 
     const payload = {
       ...form,
+      label: form.label ?? null,
       accountId:
         form.type === "expense" ||
         form.type === "income" ||
@@ -148,7 +152,34 @@ export const useTransactions = () => {
     }
   };
 
-  const updateTransaction = async (id: string, form: CreateTransaction) => {};
+  const updateTransaction = async (
+    id: string,
+    form: Partial<TransactionForm>,
+  ) => {
+    loading.value = true;
+    error.value = null;
+
+    try {
+      const accessToken = await getAccessToken();
+
+      const payload = formatPayload(form);
+
+      const res = await $fetch(`/api/transaction/${id}`, {
+        method: "PATCH",
+        baseURL: config.public.backendUrl,
+        body: payload,
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      return res;
+    } catch (err) {
+      const msg = getErrorMessage(err);
+      error.value = msg;
+      throw msg;
+    } finally {
+      loading.value = false;
+    }
+  };
 
   const deleteTransaction = async (id: string) => {};
 

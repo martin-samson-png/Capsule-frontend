@@ -2,10 +2,13 @@
 import { useAccounts } from "~/composable/accounts/useAccounts";
 import { useGoals } from "~/composable/goals/useGoals";
 import type { OptionProps } from "~/types/forms";
-import type { CreateTransaction } from "~/types/transactions";
+import type { TransactionForm } from "~/types/transactions";
 import BaseSelect from "../../BaseSelect.vue";
 
-const props = defineProps<{ modelValue: CreateTransaction }>();
+const props = defineProps<{
+  modelValue: TransactionForm;
+  isEditing: boolean;
+}>();
 
 const { accounts } = useAccounts();
 const { goals } = useGoals();
@@ -40,6 +43,7 @@ const selectGoal = computed<OptionProps[]>(() => {
     label="Depuis le compte"
     :options="selectAccounts"
     v-model="modelValue.accountId"
+    :disabled="isEditing"
   />
 
   <BaseSelect
@@ -48,5 +52,6 @@ const selectGoal = computed<OptionProps[]>(() => {
     label="Vers l'objectif"
     :options="selectGoal"
     v-model="modelValue.goalId"
+    :disabled="isEditing"
   />
 </template>

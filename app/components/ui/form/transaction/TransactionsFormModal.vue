@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { CreateTransaction } from "~/types/transactions";
+import type { TransactionForm } from "~/types/transactions";
 import TransferFields from "./TransferFields.vue";
 import ContributionFields from "./ContributionFields.vue";
 import StandardTransactionFields from "./StandardTransactionFields.vue";
@@ -7,7 +7,7 @@ import BaseTransactionFields from "./BaseTransactionFields.vue";
 import { useAccounts } from "~/composable/accounts/useAccounts";
 import { useTransactions } from "~/composable/transactions/useTransaction";
 import { useToast } from "~/composable/useToast";
-import { useTransactionModal } from "~/composable/transactions/useTransactionModal";
+import { getDirtyValues } from "../../../../utils/formHelpers";
 
 const { mainAccount, fetchAccounts } = useAccounts();
 const {
@@ -19,9 +19,8 @@ const {
   loading,
 } = useTransactions();
 const { showToast } = useToast();
-const { closeModal } = useTransactionModal();
 
-const getInitialForm = (): CreateTransaction => ({
+const getInitialForm = (): TransactionForm => ({
   type: "",
   date: formatDateForInput(new Date()),
   amount: null,
@@ -35,9 +34,11 @@ const getInitialForm = (): CreateTransaction => ({
 
 const props = defineProps<{ transactionId?: string | null }>();
 
-defineEmits(["close"]);
+const emit = defineEmits(["close"]);
 
-const form = reactive<CreateTransaction>(getInitialForm());
+const form = reactive<TransactionForm>(getInitialForm());
+
+const originalData = ref<TransactionForm | null>(null);
 
 const resetForm = () => {
   Object.assign(form, getInitialForm());
@@ -67,13 +68,18 @@ watch(
     if (newId) {
       const data = await fetchTransactionsById(newId);
 
-      Object.assign(form, {
+      const formattedData = {
         ...data,
         date: formatDateForInput(data.date),
         amount: data.amountCents / 100,
-      });
+      };
+
+      Object.assign(form, formattedData);
+
+      originalData.value = structuredClone(formattedData);
     } else {
       resetForm();
+      originalData.value = null;
     }
   },
   { immediate: true },
@@ -82,8 +88,16 @@ watch(
 const handleSubmit = async () => {
   try {
     let result;
-    if (props.transactionId) {
-      result = await updateTransaction(props.transactionId, form);
+    if (props.transactionId && originalData.value) {
+      const dirtyValue = getDirtyValues(originalData.value, form);
+
+      if (Object.keys(dirtyValue).length === 0) {
+        showToast("Aucun champs a modifié", "warning");
+        emit("close");
+        return;
+      }
+
+      result = await updateTransaction(props.transactionId, dirtyValue);
     } else {
       result = await createTransaction(form);
     }
@@ -94,9 +108,9 @@ const handleSubmit = async () => {
           ? "Transaction modifiée avec succès"
           : "Transaction créée avec succès",
       );
+      emit("close");
       resetForm();
       await Promise.all([fetchTransactions(), fetchAccounts()]);
-      closeModal();
     }
   } catch (err: unknown) {
     if (err instanceof Error) showToast(err.message, "error");
@@ -114,7 +128,7 @@ const handleDelete = async () => {
     showToast("Transaction supprimée avec succès");
     resetForm();
     await Promise.all([fetchTransactions(), fetchAccounts()]);
-    closeModal();
+    emit("close");
   } catch (err: unknown) {
     if (err instanceof Error) showToast(err.message, "error");
     else showToast("Une erreur inconnue est survenue", "error");
@@ -132,15 +146,20 @@ const handleDelete = async () => {
     </h1>
 
     <div class="flex flex-col gap-5 w-full">
-      <BaseTransactionFields :modelValue="form" />
+      <BaseTransactionFields :modelValue="form" :isEditing="!!transactionId" />
       <StandardTransactionFields
         :modelValue="form"
         v-if="form.type === 'expense' || form.type === 'income'"
       />
-      <TransferFields :modelValue="form" v-else-if="form.type === 'transfer'" />
+      <TransferFields
+        :modelValue="form"
+        v-else-if="form.type === 'transfer'"
+        :isEditing="!!transactionId"
+      />
       <ContributionFields
         :modelValue="form"
         v-else-if="form.type === 'contribution'"
+        :isEditing="!!transactionId"
       />
     </div>
     <button

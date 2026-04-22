@@ -13,7 +13,6 @@ const { isModalOpen, selectedId, openModal, closeModal } =
 onMounted(() => {
   fetchTransactions();
 });
-
 watch(
   filters,
   () => {

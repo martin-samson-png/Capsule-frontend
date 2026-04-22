@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import type { OptionProps } from "~/types/forms";
-import type { CreateTransaction } from "~/types/transactions";
+import type { TransactionForm } from "~/types/transactions";
 import BaseSelect from "../../BaseSelect.vue";
 import BaseNumber from "../../BaseNumber.vue";
 import BaseInput from "../../BaseInput.vue";
 import BaseDatePicker from "../../BaseDatePicker.vue";
 
-const props = defineProps<{ modelValue: CreateTransaction }>();
+const props = defineProps<{
+  modelValue: TransactionForm;
+  isEditing: boolean;
+}>();
 
 const emit = defineEmits(["update:modelValue"]);
 
-const model = computed<CreateTransaction>({
+const model = computed<TransactionForm>({
   get: () => props.modelValue,
   set: (v) => emit("update:modelValue", v),
 });
@@ -29,6 +32,7 @@ const selectType = ref<OptionProps[]>([
     label="Type"
     v-model="model.type"
     :options="selectType"
+    :disabled="isEditing"
   />
   <BaseNumber
     id="amount"

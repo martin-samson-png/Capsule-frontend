@@ -2,6 +2,13 @@
 import { useToast } from "~/composable/useToast";
 
 const { message, type } = useToast();
+
+const typeStyles = {
+  success: "bg-green-600",
+  error: "bg-red-600",
+  warning: "bg-yellow-500",
+  info: "bg-blue-600",
+};
 </script>
 
 <template>
@@ -9,7 +16,7 @@ const { message, type } = useToast();
     <Transition name="fade">
       <div
         v-if="message"
-        :class="type === 'success' ? 'bg-green-600' : 'bg-red-600'"
+        :class="typeStyles[type]"
         class="fixed bottom-5 right-5 text-white px-6 py-3 rounded-lg shadow-xl z-50"
       >
         {{ message }}

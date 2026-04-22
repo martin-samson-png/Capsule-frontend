@@ -1,8 +1,14 @@
 export const useToast = () => {
   const message = useState<string | null>("toast-message", () => null);
-  const type = useState<"success" | "error">("toast-type", () => "success");
+  const type = useState<"success" | "error" | "warning">(
+    "toast-type",
+    () => "success",
+  );
 
-  const showToast = (msg: string, status: "success" | "error" = "success") => {
+  const showToast = (
+    msg: string,
+    status: "success" | "error" | "warning" = "success",
+  ) => {
     message.value = msg;
     type.value = status;
 

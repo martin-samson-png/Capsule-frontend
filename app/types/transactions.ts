@@ -22,7 +22,7 @@ export type TransactionFilters = {
   accountId: string;
 };
 
-export interface CreateTransaction {
+export interface TransactionForm {
   type: TransactionType | "";
   date?: string;
   amount: number | null;

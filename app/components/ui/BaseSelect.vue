@@ -5,6 +5,7 @@ defineProps<{
   id: string;
   label: string;
   options: OptionProps[];
+  disabled?: boolean;
 }>();
 
 const model = defineModel<string | undefined>({ required: true });
@@ -17,10 +18,11 @@ const model = defineModel<string | undefined>({ required: true });
     }}</label>
     <div class="relative">
       <select
+        :disabled="disabled"
         :id="id"
         :name="id"
         v-model="model"
-        class="h-11 w-full appearance-none rounded-xl border border-slate-200 bg-white px-4 pr-10 text-sm text-[#1f2d5c] shadow-sm outline-none transition focus:border-[#1f2d5c]/30 focus:ring-4 focus:ring-[#1f2d5c]/10"
+        class="h-11 w-full appearance-none rounded-xl border border-slate-200 bg-white px-4 pr-10 text-sm text-[#1f2d5c] shadow-sm outline-none transition focus:border-[#1f2d5c]/30 focus:ring-4 focus:ring-[#1f2d5c]/10 disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400 disabled:shadow-none"
       >
         <option disabled value="">Sélectionner...</option>
         <option
