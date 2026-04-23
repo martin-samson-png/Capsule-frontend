@@ -5,6 +5,7 @@ import type { OptionProps } from "~/types/forms";
 import BaseSelect from "../BaseSelect.vue";
 import BaseDatePicker from "../BaseDatePicker.vue";
 import type { TransactionFilters } from "~/types/transactions";
+import BaseButton from "../BaseButton.vue";
 
 const filters = useState<TransactionFilters>("transactions-filter", () => ({
   from: "",
@@ -48,7 +49,7 @@ const resetFilter = () => {
       <button
         type="button"
         :class="[
-          'h-11 min-w-38 rounded-lg border-2 px-4 font-medium transition',
+          'min-h-12 min-w-40 rounded-lg border-2 px-4 font-medium transition',
           isFilterOpen
             ? 'border-[#D6E1FF] bg-[#3E63DD] text-[#D6E1FF]'
             : 'border-[#1f2d5c] bg-[#fbfdff] text-[#1f2d5c]',
@@ -83,7 +84,7 @@ const resetFilter = () => {
           v-model="filters.sortOrder"
           :options="selectSortOrder"
         />
-        <button @click="resetFilter" type="button">Reinitialiser</button>
+        <BaseButton @click="resetFilter">Reinitialiser</BaseButton>
       </div>
     </PopoverContent>
   </Popover>

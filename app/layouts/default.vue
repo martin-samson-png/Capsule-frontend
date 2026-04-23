@@ -15,11 +15,12 @@ const currentNavItem = computed(() =>
 const pageContext = computed(() => {
   const title = currentNavItem.value?.label ?? "Page";
   const icon = currentNavItem.value?.icon ?? IconHome;
+  const filters = currentNavItem.value?.filter ?? null;
 
-  return { title, icon };
+  return { title, icon, filters };
 });
 
-const isDrawerOpen = ref(true);
+const isDrawerOpen = ref(false);
 
 const toggleDrawer = () => {
   isDrawerOpen.value = !isDrawerOpen.value;

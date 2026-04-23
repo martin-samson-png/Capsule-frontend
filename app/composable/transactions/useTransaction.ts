@@ -164,14 +164,14 @@ export const useTransactions = () => {
 
       const payload = formatPayload(form);
 
-      const res = await $fetch(`/api/transaction/${id}`, {
+      await $fetch(`/api/transaction/${id}`, {
         method: "PATCH",
         baseURL: config.public.backendUrl,
         body: payload,
         headers: { Authorization: `Bearer ${accessToken}` },
       });
 
-      return res;
+      return true;
     } catch (err: any) {
       const msg = getErrorMessage(err);
       error.value = msg;
@@ -181,7 +181,28 @@ export const useTransactions = () => {
     }
   };
 
-  const deleteTransaction = async (id: string) => {};
+  const deleteTransaction = async (id: string) => {
+    loading.value = true;
+    error.value = null;
+
+    try {
+      const accessToken = await getAccessToken();
+
+      await $fetch(`/api/transaction/${id}`, {
+        method: "DELETE",
+        baseURL: config.public.backendUrl,
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+
+      return true;
+    } catch (err) {
+      const msg = getErrorMessage(err);
+      error.value = msg;
+      throw new Error(msg);
+    } finally {
+      loading.value = false;
+    }
+  };
 
   return {
     filters,

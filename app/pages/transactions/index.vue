@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import TransactionsFormModal from "~/components/ui/form/transaction/TransactionsFormModal.vue";
 import TransactionList from "~/components/ui/transactions/TransactionList.vue";
+import TransactionsFormModal from "~/components/ui/transactions/TransactionsFormModal.vue";
 import { useTransactions } from "~/composable/transactions/useTransaction";
 import { useTransactionModal } from "~/composable/transactions/useTransactionModal";
 

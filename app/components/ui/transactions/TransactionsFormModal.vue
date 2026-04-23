@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import type { TransactionForm } from "~/types/transactions";
-import TransferFields from "./TransferFields.vue";
-import ContributionFields from "./ContributionFields.vue";
-import StandardTransactionFields from "./StandardTransactionFields.vue";
-import BaseTransactionFields from "./BaseTransactionFields.vue";
 import { useAccounts } from "~/composable/accounts/useAccounts";
 import { useTransactions } from "~/composable/transactions/useTransaction";
 import { useToast } from "~/composable/useToast";
-import { getDirtyValues } from "../../../../utils/formHelpers";
+import BaseTransactionFields from "../form/transaction/BaseTransactionFields.vue";
+import StandardTransactionFields from "../form/transaction/StandardTransactionFields.vue";
+import TransferFields from "../form/transaction/TransferFields.vue";
+import ContributionFields from "../form/transaction/ContributionFields.vue";
+import BaseButton from "../BaseButton.vue";
 
 const { mainAccount, fetchAccounts } = useAccounts();
 const {
@@ -121,7 +121,7 @@ const handleSubmit = async () => {
 const handleDelete = async () => {
   try {
     if (!props.transactionId) {
-      showToast("jsp");
+      showToast("Selectinner une transaction", "error");
       return;
     }
     await deleteTransaction(props.transactionId);
@@ -162,23 +162,15 @@ const handleDelete = async () => {
         :isEditing="!!transactionId"
       />
     </div>
-    <button
-      type="submit"
-      :disabled="loading || !form.type"
-      :class="[
-        'h-12 w-full rounded-xl text-base font-semibold transition-all duration-200 min-h-12',
-        loading || !form.type
-          ? 'cursor-not-allowed bg-slate-200 text-slate-400'
-          : 'bg-[#1f2d5c] text-white hover:opacity-90',
-      ]"
+    <BaseButton type="submit" :loading="loading" :disabled="!form.type">{{
+      transactionId ? "Enregister les modifications" : "Créer"
+    }}</BaseButton>
+    <BaseButton
+      v-if="transactionId"
+      :loading="loading"
+      variant="danger"
+      @click="handleDelete"
+      >Supprimmer la transaction</BaseButton
     >
-      {{
-        loading
-          ? "Chargement"
-          : transactionId
-            ? "Enregistrer le modification"
-            : "Créer"
-      }}
-    </button>
   </form>
 </template>
