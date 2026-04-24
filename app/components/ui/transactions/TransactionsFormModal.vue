@@ -92,7 +92,7 @@ const handleSubmit = async () => {
       const dirtyValue = getDirtyValues(originalData.value, form);
 
       if (Object.keys(dirtyValue).length === 0) {
-        showToast("Aucun champs a modifié", "warning");
+        showToast("Aucun champ à modifier", "warning");
         emit("close");
         return;
       }
@@ -170,7 +170,7 @@ const handleDelete = async () => {
       :loading="loading"
       variant="danger"
       @click="handleDelete"
-      >Supprimmer la transaction</BaseButton
+      >Supprimer la transaction</BaseButton
     >
   </form>
 </template>

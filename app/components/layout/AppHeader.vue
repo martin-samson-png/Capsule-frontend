@@ -31,7 +31,12 @@ const getColorFromUsername = (username: string) => {
     class="absolute top-0 left-0 right-0 z-50 h-18 md:h-20 px-4 md:px-6 flex items-center justify-between md:justify-end bg-[#fbfdff]"
   >
     <button
-      :class="['md:hidden', profile === null ? 'hidden' : '']"
+      :class="[
+        'md:hidden',
+        profile === null
+          ? 'opacity-0 pointer-events-none'
+          : 'opacity-100 pointer-events-auto',
+      ]"
       @click="emit('toggleDrawer')"
     >
       <IconX :size="28" v-if="open" />
