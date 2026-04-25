@@ -3,6 +3,8 @@ import { navItems } from "~/constant/navigation";
 
 const props = defineProps<{ open: boolean }>();
 
+const emit = defineEmits(["close"]);
+
 const route = useRoute();
 </script>
 
@@ -14,6 +16,7 @@ const route = useRoute();
     <div class="h-full flex flex-col justify-between">
       <nav class="py-2 md:flex flex-col md:justify-center space-y-7 w-full">
         <NuxtLink
+          @click="$emit('close')"
           v-for="item in navItems"
           :key="item.to"
           :to="item.to"

@@ -28,7 +28,16 @@ const toggleDrawer = () => {
 </script>
 <template>
   <AppHeader @toggle-drawer="toggleDrawer" :open="isDrawerOpen" />
-  <AppDrawer class="pt-18 md:pt-20" :open="isDrawerOpen" />
+  <div
+    v-if="isDrawerOpen"
+    class="fixed inset-0 md:hidden"
+    @click.self="isDrawerOpen = false"
+  ></div>
+  <AppDrawer
+    class="pt-18 md:pt-20"
+    :open="isDrawerOpen"
+    @close="isDrawerOpen = false"
+  />
   <AppToast />
   <main class="pt-18 md:pt-20 md:pl-72 bg-[#edf2fe] min-h-screen">
     <ContextBar :context="pageContext" />

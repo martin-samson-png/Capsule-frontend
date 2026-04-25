@@ -30,51 +30,55 @@ const getColorFromUsername = (username: string) => {
   <header
     class="absolute top-0 left-0 right-0 z-50 h-18 md:h-20 px-4 md:px-6 flex items-center justify-between md:justify-end bg-[#fbfdff]"
   >
-    <button
-      :class="[
-        'md:hidden',
-        profile === null
-          ? 'opacity-0 pointer-events-none'
-          : 'opacity-100 pointer-events-auto',
-      ]"
-      @click="emit('toggleDrawer')"
-    >
-      <IconX :size="28" v-if="open" />
-      <IconMenu :size="28" v-else />
-    </button>
-    <div
-      v-if="profile === null"
-      class="h-full w-full md:w-1/5 flex justify-evenly items-center"
-    >
-      <NuxtLink
-        to="/auth/login"
-        class="h-12 w-1/3 flex items-center justify-center hover:cursor rounded-lg shadow-sm hover:bg-[#3e63dd] hover:text-[#fbfdff] transition-all duration-300 ease-in-out hover:-translate-y-0.5 after:absolute after:left-1/2 after:bottom-1.5 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-300 after:-translate-x-1/2 hover:after:w-3/4 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
-        >Se connecter</NuxtLink
+    <ClientOnly>
+      <button
+        :class="[
+          'md:hidden',
+          profile === null
+            ? 'opacity-0 pointer-events-none'
+            : 'opacity-100 pointer-events-auto',
+        ]"
+        @click="emit('toggleDrawer')"
       >
-      <NuxtLink
-        to="/auth/register"
-        class="h-12 w-1/3 flex items-center justify-center hover:cursor rounded-lg shadow-sm hover:bg-[#3e63dd] hover:text-[#fbfdff] transition-all duration-300 ease-in-out hover:-translate-y-0.5 after:absolute after:left-1/2 after:bottom-1.5 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-300 after:-translate-x-1/2 hover:after:w-3/4 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
-        >S'inscrire</NuxtLink
-      >
-    </div>
-    <div
-      v-else
-      class="w-full md:w-1/5 h-full flex justify-end items-center gap-3 pr-3"
-    >
+        <IconX :size="28" v-if="open" />
+        <IconMenu :size="28" v-else />
+      </button>
+    </ClientOnly>
+
+    <ClientOnly>
       <div
-        class="flex size-10 items-center justify-center rounded-full text-xl"
-        :style="{ backgroundColor: getColorFromUsername(profile.displayName) }"
+        v-if="profile === null"
+        class="h-full w-full md:w-1/5 flex justify-evenly items-center"
       >
-        <img
-          v-if="profile.avatarUrl"
-          :src="profile.avatarUrl"
-          alt="avatar du profile"
-        />
-        <span v-else>{{
-          profile.displayName.split("")[0]?.toUpperCase()
-        }}</span>
+        <NuxtLink to="/auth/login" class="...">Se connecter</NuxtLink>
+        <NuxtLink to="/auth/register" class="...">S'inscrire</NuxtLink>
       </div>
-      <span class="font-medium text-xl">{{ profile.displayName }}</span>
-    </div>
+
+      <div
+        v-else
+        class="w-full md:w-1/5 h-full flex justify-end items-center gap-3 pr-3"
+      >
+        <div
+          class="flex size-10 items-center justify-center rounded-full text-xl"
+          :style="{
+            backgroundColor: getColorFromUsername(profile.displayName),
+          }"
+        >
+          <img v-if="profile.avatarUrl" :src="profile.avatarUrl" alt="avatar" />
+          <span v-else>{{
+            profile.displayName.split("")[0]?.toUpperCase()
+          }}</span>
+        </div>
+        <span class="font-medium text-xl">{{ profile.displayName }}</span>
+      </div>
+
+      <template #fallback>
+        <div class="w-full md:w-1/5 h-full flex justify-end items-center px-4">
+          <div
+            class="size-8 animate-spin rounded-full border-2 border-slate-200 border-t-blue-600"
+          ></div>
+        </div>
+      </template>
+    </ClientOnly>
   </header>
 </template>
