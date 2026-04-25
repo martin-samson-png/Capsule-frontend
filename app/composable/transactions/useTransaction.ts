@@ -7,32 +7,25 @@ import type {
 import { useAuth } from "../useAuth";
 import { formatPayload } from "~/utils/formHelpers";
 
-const getCleanPayload = (form: TransactionForm): TransactionForm => {
-  return { ...form };
-};
-
 const validateForm = (form: TransactionForm) => {
-  if (!form.type) throw new Error("Type obligatoire");
+  if (!form.type) return "Type obligatoire";
 
-  if (!form.amount || form.amount <= 0) throw new Error("Montant invalide");
+  if (!form.amount || form.amount <= 0) return "Montant invalide";
 
   if (
     ["expense", "income", "contribution"].includes(form.type) &&
     !form.accountId
   )
-    throw new Error("Compte obligatoire");
+    return "Compte obligatoire";
 
   if (form.type === "transfer") {
-    if (!form.fromAccountId || !form.toAccountId)
-      throw new Error("Compte obligatoire");
+    if (!form.fromAccountId || !form.toAccountId) return "Compte obligatoire";
     if (form.fromAccountId === form.toAccountId)
-      throw new Error(
-        "Le compte source et destination doivent être différents",
-      );
+      return "Le compte source et destination doivent être différents";
   }
 
   if (form.type === "contribution" && !form.goalId)
-    throw new Error("Objectif obligatoire");
+    return "Objectif obligatoire";
 
   return null;
 };
@@ -50,9 +43,19 @@ export const useTransactions = () => {
   }));
 
   const transactions = useState<Transaction[]>("transactions", () => []);
+  const error = useState<string | null>("transaction-error", () => null);
   const hasMore = ref(false);
   const loading = ref(false);
-  const error = ref<string | null>(null);
+
+  const resetFilters = () => {
+    filters.value = {
+      from: "",
+      to: "",
+      type: "",
+      sortOrder: "",
+      accountId: "",
+    };
+  };
 
   const fetchTransactions = async () => {
     loading.value = true;
@@ -77,6 +80,7 @@ export const useTransactions = () => {
       hasMore.value = res.hasMore;
     } catch (err) {
       error.value = getErrorMessage(err);
+      throw err;
     } finally {
       loading.value = false;
     }
@@ -97,9 +101,8 @@ export const useTransactions = () => {
 
       return res;
     } catch (err) {
-      const msg = getErrorMessage(err);
-      error.value = msg;
-      throw new Error(msg);
+      error.value = getErrorMessage(err);
+      throw err;
     } finally {
       loading.value = false;
     }
@@ -111,8 +114,7 @@ export const useTransactions = () => {
     const validationError = validateForm(form);
     if (validationError) {
       error.value = validationError;
-
-      throw new Error(validationError);
+      throw validationError;
     }
     loading.value = true;
 
@@ -144,9 +146,8 @@ export const useTransactions = () => {
 
       return res;
     } catch (err) {
-      const msg = getErrorMessage(err);
-      error.value = msg;
-      throw new Error(msg);
+      error.value = getErrorMessage(err);
+      throw err;
     } finally {
       loading.value = false;
     }
@@ -173,9 +174,8 @@ export const useTransactions = () => {
 
       return true;
     } catch (err: any) {
-      const msg = getErrorMessage(err);
-      error.value = msg;
-      throw new Error(msg);
+      error.value = getErrorMessage(err);
+      throw err;
     } finally {
       loading.value = false;
     }
@@ -196,9 +196,8 @@ export const useTransactions = () => {
 
       return true;
     } catch (err) {
-      const msg = getErrorMessage(err);
-      error.value = msg;
-      throw new Error(msg);
+      error.value = getErrorMessage(err);
+      throw err;
     } finally {
       loading.value = false;
     }
@@ -211,6 +210,7 @@ export const useTransactions = () => {
     error,
     hasMore,
     fetchTransactions,
+    resetFilters,
     fetchTransactionsById,
     createTransaction,
     updateTransaction,

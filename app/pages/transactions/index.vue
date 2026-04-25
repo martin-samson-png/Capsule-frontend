@@ -3,9 +3,12 @@ import TransactionList from "~/components/ui/transactions/TransactionList.vue";
 import TransactionsFormModal from "~/components/ui/transactions/TransactionsFormModal.vue";
 import { useTransactions } from "~/composable/transactions/useTransaction";
 import { useTransactionModal } from "~/composable/transactions/useTransactionModal";
+import { useToast } from "~/composable/useToast";
 
 const { filters, transactions, hasMore, loading, error, fetchTransactions } =
   useTransactions();
+
+const { showToast } = useToast();
 
 const { isModalOpen, selectedId, openModal, closeModal } =
   useTransactionModal();
@@ -20,6 +23,15 @@ watch(
   },
   { deep: true },
 );
+
+watch(error, (newError) => {
+  if (newError) {
+    showToast(newError, "error");
+    setTimeout(() => {
+      error.value = null;
+    }, 2000);
+  }
+});
 </script>
 <template>
   <div class="space-y-6 pt-10">
@@ -28,9 +40,7 @@ watch(
         class="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-[#1f2d5c]"
       ></div>
     </div>
-    <div v-else-if="error">
-      {{ error }}
-    </div>
+
     <div v-else-if="transactions.length === 0">Aucune transaction trouvée.</div>
     <div v-else>
       <TransactionList

@@ -6,6 +6,7 @@ import BaseSelect from "../BaseSelect.vue";
 import BaseDatePicker from "../BaseDatePicker.vue";
 import type { TransactionFilters } from "~/types/transactions";
 import BaseButton from "../BaseButton.vue";
+import { useTransactions } from "~/composable/transactions/useTransaction";
 
 const filters = useState<TransactionFilters>("transactions-filter", () => ({
   from: "",
@@ -14,6 +15,8 @@ const filters = useState<TransactionFilters>("transactions-filter", () => ({
   sortOrder: "",
   accountId: "",
 }));
+
+const { resetFilters } = useTransactions();
 
 const selectType = ref<OptionProps[]>([
   { value: "expense", label: "Dépense" },
@@ -33,14 +36,6 @@ const selectAccount = ref<OptionProps[]>([
 ]);
 
 const isFilterOpen = ref(false);
-
-const resetFilter = () => {
-  filters.value.from = "";
-  filters.value.to = "";
-  filters.value.type = "";
-  filters.value.sortOrder = "";
-  filters.value.accountId = "";
-};
 </script>
 
 <template>
@@ -84,7 +79,7 @@ const resetFilter = () => {
           v-model="filters.sortOrder"
           :options="selectSortOrder"
         />
-        <BaseButton @click="resetFilter">Reinitialiser</BaseButton>
+        <BaseButton @click="resetFilters">Reinitialiser</BaseButton>
       </div>
     </PopoverContent>
   </Popover>

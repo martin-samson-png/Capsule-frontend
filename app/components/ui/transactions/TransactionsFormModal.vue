@@ -68,6 +68,8 @@ watch(
     if (newId) {
       const data = await fetchTransactionsById(newId);
 
+      if (!data) return;
+
       const formattedData = {
         ...data,
         date: formatDateForInput(data.date),
@@ -112,9 +114,9 @@ const handleSubmit = async () => {
       resetForm();
       await Promise.all([fetchTransactions(), fetchAccounts()]);
     }
-  } catch (err: unknown) {
-    if (err instanceof Error) showToast(err.message, "error");
-    else showToast("Une erreur inconnue est survenue", "error");
+  } catch (err) {
+    // Erreur gérée par le watch global dans index.vue
+    // On catch uniquement pour stopper l'exécution de handleSubmit}
   }
 };
 
