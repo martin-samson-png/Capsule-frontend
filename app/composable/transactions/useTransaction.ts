@@ -173,7 +173,7 @@ export const useTransactions = () => {
       });
 
       return true;
-    } catch (err: any) {
+    } catch (err) {
       error.value = getErrorMessage(err);
       throw err;
     } finally {
