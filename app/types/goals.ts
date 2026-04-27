@@ -7,6 +7,7 @@ export interface Goal {
   currentAmountCents: number;
   deadline: string;
   status: GoalStatus;
+  icon: string;
   createdAt: string;
 }
 
