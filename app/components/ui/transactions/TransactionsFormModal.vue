@@ -8,6 +8,7 @@ import StandardTransactionFields from "../form/transaction/StandardTransactionFi
 import TransferFields from "../form/transaction/TransferFields.vue";
 import ContributionFields from "../form/transaction/ContributionFields.vue";
 import BaseButton from "../BaseButton.vue";
+import { useTransactionModal } from "~/composable/transactions/useTransactionModal";
 
 const { mainAccount, fetchAccounts } = useAccounts();
 const {
@@ -20,19 +21,24 @@ const {
 } = useTransactions();
 const { showToast } = useToast();
 
+const { forcedTransactionType, targetGoalId, forcedLabel } =
+  useTransactionModal();
+
+const props = defineProps<{
+  transactionId?: string | null;
+}>();
+
 const getInitialForm = (): TransactionForm => ({
-  type: "",
+  type: forcedTransactionType.value || "",
   date: formatDateForInput(new Date()),
   amount: null,
-  label: "",
+  label: forcedLabel.value || "",
   accountId: "",
   fromAccountId: "",
   toAccountId: "",
   categoryId: "",
-  goalId: "",
+  goalId: targetGoalId.value || "",
 });
-
-const props = defineProps<{ transactionId?: string | null }>();
 
 const emit = defineEmits(["close"]);
 
@@ -105,11 +111,14 @@ const handleSubmit = async () => {
     }
 
     if (result) {
-      showToast(
-        props.transactionId
-          ? "Transaction modifiée avec succès"
-          : "Transaction créée avec succès",
-      );
+      let successMessage = "Transaction créée avec succès";
+
+      if (props.transactionId) {
+        successMessage = "Transaction modifiée avec succès";
+      } else if (targetGoalId.value) {
+        successMessage = "Contribution créée avec succès";
+      }
+      showToast(successMessage);
       emit("close");
       resetForm();
       await Promise.all([fetchTransactions(), fetchAccounts()]);
@@ -148,7 +157,10 @@ const handleDelete = async () => {
     </h1>
 
     <div class="flex flex-col gap-5 w-full">
-      <BaseTransactionFields :modelValue="form" :isEditing="!!transactionId" />
+      <BaseTransactionFields
+        :modelValue="form"
+        :isEditing="!!transactionId || !!forcedTransactionType"
+      />
       <StandardTransactionFields
         :modelValue="form"
         v-if="form.type === 'expense' || form.type === 'income'"

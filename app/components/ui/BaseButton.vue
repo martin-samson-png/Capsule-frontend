@@ -13,7 +13,7 @@ withDefaults(defineProps<Props>(), {
 });
 
 const variants = {
-  primary: "bg-[#1f2d5c] text-white hover:opacity-90 active:scale-[0.98]",
+  primary: "bg-[#3E63DD] text-white hover:opacity-90 active:scale-[0.98]",
   danger: "bg-red-600 text-white hover:bg-red-700 active:scale-[0.98]",
   secondary: "bg-slate-100 text-slate-700 hover:bg-slate-200",
 };
@@ -24,7 +24,7 @@ const variants = {
     :type="type"
     :disabled="disabled || loading"
     :class="[
-      'min-h-12 w-full rounded-xl text-base font-semibold transition-all duration-200 flex items-center justify-center gap-2',
+      'min-h-12 w-full rounded-xl text-base font-semibold transition-all duration-200 flex items-center justify-center gap-2 hover:cursor-pointer',
       disabled || loading
         ? 'cursor-not-allowed bg-slate-200 text-slate-400'
         : variants[variant],

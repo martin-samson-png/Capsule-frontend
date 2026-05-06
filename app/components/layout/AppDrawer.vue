@@ -10,11 +10,11 @@ const route = useRoute();
 
 <template>
   <aside
-    class="fixed max-h-screen h-full left-0 min-w-72 transform transition-transform px-3 bg-[#fbfdff] md:translate-x-0"
+    class="fixed z-50 max-h-screen h-full left-0 min-w-72 transform transition-transform px-3 bg-[#fbfdff] lg:translate-x-0"
     :class="open ? 'translate-x-0' : '-translate-x-full'"
   >
     <div class="h-full flex flex-col justify-between">
-      <nav class="py-2 md:flex flex-col md:justify-center space-y-7 w-full">
+      <nav class="py-2 lg:flex flex-col lg:justify-center space-y-7 w-full">
         <NuxtLink
           @click="$emit('close')"
           v-for="item in navItems"

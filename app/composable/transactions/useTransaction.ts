@@ -114,6 +114,7 @@ export const useTransactions = () => {
     const validationError = validateForm(form);
     if (validationError) {
       error.value = validationError;
+
       throw validationError;
     }
     loading.value = true;

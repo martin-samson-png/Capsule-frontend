@@ -28,12 +28,12 @@ const getColorFromUsername = (username: string) => {
 
 <template>
   <header
-    class="absolute top-0 left-0 right-0 z-50 h-18 md:h-20 px-4 md:px-6 flex items-center justify-between md:justify-end bg-[#fbfdff]"
+    class="absolute z-60 top-0 left-0 right-0 z-50 h-18 lg:h-20 px-4 lg:px-6 flex items-center justify-between lg:justify-end bg-[#fbfdff]"
   >
     <ClientOnly>
       <button
         :class="[
-          'md:hidden',
+          'lg:hidden',
           profile === null
             ? 'opacity-0 pointer-events-none'
             : 'opacity-100 pointer-events-auto',
@@ -48,7 +48,7 @@ const getColorFromUsername = (username: string) => {
     <ClientOnly>
       <div
         v-if="profile === null"
-        class="h-full w-full md:w-1/5 flex justify-evenly items-center"
+        class="h-full w-full lg:w-1/5 flex justify-evenly items-center"
       >
         <NuxtLink to="/auth/login" class="...">Se connecter</NuxtLink>
         <NuxtLink to="/auth/register" class="...">S'inscrire</NuxtLink>
@@ -56,7 +56,7 @@ const getColorFromUsername = (username: string) => {
 
       <div
         v-else
-        class="w-full md:w-1/5 h-full flex justify-end items-center gap-3 pr-3"
+        class="w-full lg:w-1/5 h-full flex justify-end items-center gap-3 pr-3"
       >
         <div
           class="flex size-10 items-center justify-center rounded-full text-xl"
@@ -73,7 +73,7 @@ const getColorFromUsername = (username: string) => {
       </div>
 
       <template #fallback>
-        <div class="w-full md:w-1/5 h-full flex justify-end items-center px-4">
+        <div class="w-full lg:w-1/5 h-full flex justify-end items-center px-4">
           <div
             class="size-8 animate-spin rounded-full border-2 border-slate-200 border-t-blue-600"
           ></div>

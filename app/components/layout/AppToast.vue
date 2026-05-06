@@ -17,7 +17,7 @@ const typeStyles = {
       <div
         v-if="message"
         :class="typeStyles[type]"
-        class="fixed bottom-5 right-5 text-white px-6 py-3 rounded-lg shadow-xl z-50"
+        class="fixed bottom-5 right-5 text-white px-6 py-3 rounded-lg shadow-xl z-100"
       >
         {{ message }}
       </div>

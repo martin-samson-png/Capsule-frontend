@@ -30,18 +30,18 @@ const toggleDrawer = () => {
   <AppHeader @toggle-drawer="toggleDrawer" :open="isDrawerOpen" />
   <div
     v-if="isDrawerOpen"
-    class="fixed inset-0 md:hidden"
+    class="fixed inset-0 lg:hidden"
     @click.self="isDrawerOpen = false"
   ></div>
   <AppDrawer
-    class="pt-18 md:pt-20"
+    class="pt-18 lg:pt-20"
     :open="isDrawerOpen"
     @close="isDrawerOpen = false"
   />
   <AppToast />
-  <main class="pt-18 md:pt-20 md:pl-72 bg-[#edf2fe] min-h-screen">
+  <main class="pt-18 lg:pt-20 lg:pl-72 bg-[#edf2fe] min-h-screen">
     <ContextBar :context="pageContext" />
-    <div class="px-4 md:px-6 lg:px-8">
+    <div class="px-4 lg:px-6 lg:px-8">
       <slot />
     </div>
   </main>

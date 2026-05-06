@@ -35,9 +35,12 @@ watch(error, (newError) => {
 </script>
 <template>
   <div class="space-y-6 pt-10">
-    <div v-if="loading" class="flex justify-center items-center py-10">
+    <div
+      v-if="loading"
+      class="flex flex-col items-center justify-center min-h-[200px] w-full"
+    >
       <div
-        class="h-8 w-8 animate-spin rounded-full border-4 border-slate-200 border-t-[#1f2d5c]"
+        class="size-8 animate-spin rounded-full border-2 border-slate-200 border-t-blue-600"
       ></div>
     </div>
 
@@ -50,8 +53,8 @@ watch(error, (newError) => {
     </div>
     <div
       @click.self="closeModal"
-      v-show="isModalOpen"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4"
+      v-if="isModalOpen"
+      class="fixed inset-0 z-70 flex items-center justify-center bg-slate-900/50 p-4"
     >
       <TransactionsFormModal :transaction-id="selectedId" @close="closeModal" />
     </div>
