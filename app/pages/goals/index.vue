@@ -1,19 +1,23 @@
 <script setup lang="ts">
+import GoalsFormModal from "~/components/ui/goals/GoalsFormModal.vue";
 import GoalsList from "~/components/ui/goals/GoalsList.vue";
 import TransactionsFormModal from "~/components/ui/transactions/TransactionsFormModal.vue";
 import { useGoals } from "~/composable/goals/useGoals";
+import { useGoalModal } from "~/composable/goals/useGoalsModal";
 import { useTransactions } from "~/composable/transactions/useTransaction";
 import { useTransactionModal } from "~/composable/transactions/useTransactionModal";
 import { useToast } from "~/composable/useToast";
 import type { Goal } from "~/types/goals";
 
-const { fetchGoals, goals, loading } = useGoals();
+const { fetchGoals, goals, loading, filters } = useGoals();
 
 const { error } = useTransactions();
 
 const { showToast } = useToast();
 
 const { isModalOpen, openForContribution, closeModal } = useTransactionModal();
+
+const { isGoalModalOpen, closeGoalModal } = useGoalModal();
 
 onMounted(() => {
   fetchGoals();
@@ -40,6 +44,19 @@ const handleContribute = (goal: Goal) => {
   openForContribution(goal);
 };
 
+const closeModalAndFetch = async () => {
+  await fetchGoals();
+  closeModal();
+};
+
+watch(
+  filters,
+  () => {
+    fetchGoals();
+  },
+  { deep: true },
+);
+
 watch(error, (newError) => {
   if (newError) {
     showToast(newError, "error");
@@ -50,25 +67,33 @@ watch(error, (newError) => {
 });
 </script>
 <template>
-  <div
-    v-if="loading"
-    class="flex flex-col items-center justify-center min-h-[200px] w-full"
-  >
+  <div class="space-y-6 pt-10">
     <div
-      class="size-8 animate-spin rounded-full border-2 border-slate-200 border-t-blue-600"
-    ></div>
-  </div>
-  <GoalsList
-    v-else-if="goals"
-    :goals="sortedGoals"
-    @contribute="handleContribute"
-  />
-  <div v-else><span>Aucun objectif trouvé</span></div>
-  <div
-    @click.self="closeModal"
-    v-if="isModalOpen"
-    class="fixed inset-0 z-70 flex items-center justify-center bg-slate-900/50 p-4"
-  >
-    <TransactionsFormModal @close="closeModal" />
+      v-if="loading"
+      class="flex flex-col items-center justify-center min-h-[200px] w-full"
+    >
+      <div
+        class="size-8 animate-spin rounded-full border-2 border-slate-200 border-t-blue-600"
+      ></div>
+    </div>
+    <GoalsList
+      v-else-if="goals"
+      :goals="sortedGoals"
+      @contribute="handleContribute"
+    />
+    <div
+      @click.self="closeModal"
+      v-if="isModalOpen"
+      class="fixed inset-0 z-70 flex items-center justify-center bg-slate-900/50 p-4"
+    >
+      <TransactionsFormModal @close="closeModalAndFetch" />
+    </div>
+    <div
+      @click.self="closeGoalModal"
+      v-if="isGoalModalOpen"
+      class="fixed inset-0 z-70 flex items-center justify-center bg-slate-900/50 p-4"
+    >
+      <GoalsFormModal />
+    </div>
   </div>
 </template>

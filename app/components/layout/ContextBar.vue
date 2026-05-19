@@ -3,6 +3,8 @@ import type { Component } from "vue";
 import TransactionsFilter from "../ui/transactions/TransactionsFilter.vue";
 import AddTransactionButton from "../ui/transactions/AddTransactionButton.vue";
 import type { FilterKey } from "~/constant/navigation";
+import AddGoalButton from "../ui/goals/AddGoalButton.vue";
+import GoalsFillter from "../ui/goals/GoalsFillter.vue";
 
 const props = defineProps<{
   context: {
@@ -31,6 +33,8 @@ const showFilter = (k: FilterKey) => {
     <div class="md:w-1/3 h-full gap-5 flex justify-end items-center">
       <AddTransactionButton v-if="showFilter('addTransactionButton')" />
       <TransactionsFilter v-if="showFilter('transactionFilter')" />
+      <AddGoalButton v-if="showFilter('addGoalButton')" />
+      <GoalsFillter v-if="showFilter('goalsFilter')" />
     </div>
   </header>
 </template>

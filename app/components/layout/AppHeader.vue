@@ -50,8 +50,16 @@ const getColorFromUsername = (username: string) => {
         v-if="profile === null"
         class="h-full w-full lg:w-1/5 flex justify-evenly items-center"
       >
-        <NuxtLink to="/auth/login" class="...">Se connecter</NuxtLink>
-        <NuxtLink to="/auth/register" class="...">S'inscrire</NuxtLink>
+        <NuxtLink
+          to="/auth/login"
+          class="relative inline-block px-4 py-2 rounded-lg font-medium text-gray-700 bg-white shadow-sm border border-gray-200 transition-all duration-300 ease-in-out hover:bg-[#3E63DD] hover:text-blue-700 hover:-translate-y-0.5 after:absolute after:left-1/2 after:bottom-1.5 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-300 after:-translate-x-1/2 hover:after:w-3/4 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 hover:cursor-pointer"
+          >Se connecter</NuxtLink
+        >
+        <NuxtLink
+          to="/auth/register"
+          class="relative inline-block px-4 py-2 rounded-lg font-medium text-gray-700 bg-white shadow-sm border border-gray-200 transition-all duration-300 ease-in-out hover:bg-[#3E63DD] hover:text-blue-700 hover:-translate-y-0.5 after:absolute after:left-1/2 after:bottom-1.5 after:h-[2px] after:w-0 after:bg-current after:transition-all after:duration-300 after:-translate-x-1/2 hover:after:w-3/4 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 hover:cursor-pointer"
+          >S'inscrire</NuxtLink
+        >
       </div>
 
       <div

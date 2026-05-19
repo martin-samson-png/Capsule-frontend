@@ -42,7 +42,6 @@ export const useTransactionModal = () => {
     forcedTransactionType.value = "contribution";
     targetGoalId.value = goal.id;
     forcedLabel.value = `Contribution ${goal.label}`;
-
     isModalOpen.value = true;
   };
 

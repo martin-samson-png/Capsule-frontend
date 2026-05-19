@@ -13,4 +13,20 @@ export interface Goal {
 
 export interface GoalResponse {
   data: Goal[];
+  hasMore: boolean;
+}
+
+export interface GoalFilter {
+  label: string;
+  status: "active" | "completed" | "archived" | "";
+  deadlineFrom: string;
+  deadlineTo: string;
+  sortOrder: "asc" | "desc" | "";
+}
+
+export interface GoalForm {
+  label: string;
+  targetAmount: number | null;
+  deadline?: string;
+  icon: string;
 }

@@ -1,29 +1,22 @@
 <script setup lang="ts">
-import { ref } from "vue";
 import { Popover, PopoverContent, PopoverTrigger } from "~/lib/ui/popover";
-import type { OptionProps } from "~/types/forms";
-import BaseSelect from "../BaseSelect.vue";
 import BaseDatePicker from "../BaseDatePicker.vue";
+import BaseSelect from "../BaseSelect.vue";
 import BaseButton from "../BaseButton.vue";
-import { useTransactions } from "~/composable/transactions/useTransaction";
+import { useGoals } from "~/composable/goals/useGoals";
+import type { OptionProps } from "~/types/forms";
 
-const { resetFilters, filters } = useTransactions();
-
-const selectType = ref<OptionProps[]>([
-  { value: "expense", label: "Dépense" },
-  { value: "income", label: "Revenu" },
-  { value: "transfer", label: "Transfert" },
-  { value: "contribution", label: "Contribution" },
-]);
+const { resetFilters, filters } = useGoals();
 
 const selectSortOrder = ref<OptionProps[]>([
   { value: "desc", label: "Plus récent" },
   { value: "asc", label: "Plus ancien" },
 ]);
 
-const selectAccount = ref<OptionProps[]>([
-  { value: "main", label: "Compte principal" },
-  { value: "savings", label: " Compte épargne" },
+const selectStatus = ref<OptionProps[]>([
+  { value: "active", label: "En cours" },
+  { value: "completed", label: "Terminé" },
+  { value: "archived", label: "Archivé" },
 ]);
 
 const isFilterOpen = ref(false);
@@ -47,22 +40,21 @@ const isFilterOpen = ref(false);
     <PopoverContent class="w-80">
       <div class="flex flex-col gap-4">
         <BaseDatePicker
-          id="from"
-          label="Date de début"
-          v-model="filters.from"
+          id="deadlineFrom"
+          label="Limite du"
+          v-model="filters.deadlineFrom"
         />
-        <BaseDatePicker id="to" label="Date de fin" v-model="filters.to" />
-        <BaseSelect
-          id="account"
-          label="Compte"
-          v-model="filters.accountId"
-          :options="selectAccount"
+        <BaseDatePicker
+          id="to"
+          label="Limite au"
+          v-model="filters.deadlineTo"
         />
+
         <BaseSelect
-          id="type"
-          label="Type"
-          v-model="filters.type"
-          :options="selectType"
+          id="status"
+          label="Status"
+          v-model="filters.status"
+          :options="selectStatus"
         />
         <BaseSelect
           id="sortOrder"

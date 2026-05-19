@@ -10,6 +10,7 @@ export type FilterKey =
   | "chartsFilter"
   | "addTransactionButton"
   | "transactionFilter"
+  | "addGoalButton"
   | "goalsFilter";
 
 type NavItem = {
@@ -33,5 +34,10 @@ export const navItems: NavItem[] = [
     icon: IconArrowLeftRight,
     filter: ["addTransactionButton", "transactionFilter"],
   },
-  { label: "Objectifs", to: "/goals", icon: IconGoal, filter: "goalsFilter" },
+  {
+    label: "Objectifs",
+    to: "/goals",
+    icon: IconGoal,
+    filter: ["addGoalButton", "goalsFilter"],
+  },
 ];
