@@ -8,7 +8,7 @@ import { useToast } from "~/composable/useToast";
 const { filters, transactions, hasMore, loading, error, fetchTransactions } =
   useTransactions();
 
-const { showToast } = useToast();
+const { showToast, watchError } = useToast();
 
 const { isModalOpen, selectedId, openModal, closeModal } =
   useTransactionModal();
@@ -24,14 +24,7 @@ watch(
   { deep: true },
 );
 
-watch(error, (newError) => {
-  if (newError) {
-    showToast(newError, "error");
-    setTimeout(() => {
-      error.value = null;
-    }, 2000);
-  }
-});
+watchError(error);
 </script>
 <template>
   <div class="space-y-6 pt-10">

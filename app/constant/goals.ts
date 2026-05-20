@@ -18,6 +18,7 @@ import {
   Gift,
   Gamepad,
   Rocket,
+  Shirt,
 } from "lucide-vue-next";
 
 import type { Component } from "vue";
@@ -42,6 +43,7 @@ export const goalIconsComponents: Record<string, Component> = {
   Gift,
   Gamepad,
   Rocket,
+  Shirt,
 };
 
 export const availableGoalIcon = Object.keys(goalIconsComponents);

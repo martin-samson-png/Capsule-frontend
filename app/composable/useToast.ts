@@ -17,5 +17,16 @@ export const useToast = () => {
     }, 4000);
   };
 
-  return { message, type, showToast };
+  const watchError = (errorRef: Ref<string | null>) => {
+    watch(errorRef, (newError) => {
+      if (newError) {
+        showToast(newError, "error");
+        setTimeout(() => {
+          errorRef.value = null;
+        }, 2000);
+      }
+    });
+  };
+
+  return { message, type, showToast, watchError };
 };

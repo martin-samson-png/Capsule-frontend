@@ -1,4 +1,4 @@
-import type { GoalResponse, Goal, GoalFilter } from "~/types/goals";
+import type { GoalResponse, Goal, GoalFilter, GoalForm } from "~/types/goals";
 import { useAuth } from "../useAuth";
 
 const calculateProgress = (current: number, target: number) => {
@@ -6,6 +6,14 @@ const calculateProgress = (current: number, target: number) => {
   let percentage = (current / target) * 100;
   if (percentage > 100) percentage = 100;
   return Math.round(percentage);
+};
+
+const validateForm = (form: GoalForm) => {
+  if (!form.label) return "Libellé obligatoire";
+  if (!form.targetAmount || form.targetAmount <= 0) return "Montant invalide";
+  if (!form.icon) return "Icone obligatoire";
+  if (!form.deadline) return "Date limite obligatoire";
+  return null;
 };
 
 export const useGoals = () => {
@@ -78,6 +86,42 @@ export const useGoals = () => {
     }
   };
 
+  const createGoal = async (form: GoalForm) => {
+    error.value = null;
+    console.log("essaie 2");
+
+    const validationError = validateForm(form);
+    if (validationError) {
+      console.log(validationError);
+
+      error.value = validationError;
+      throw validationError;
+    }
+
+    loading.value = true;
+
+    try {
+      const accessToken = await getAccessToken();
+
+      const res = await $fetch("/api/goal/create", {
+        method: "POST",
+        body: form,
+        baseURL: config.public.backendUrl,
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      console.log(res);
+
+      return res;
+    } catch (err) {
+      console.log(err);
+
+      error.value = getErrorMessage(err);
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  };
+
   return {
     filters,
     goals,
@@ -85,6 +129,7 @@ export const useGoals = () => {
     error,
     resetFilters,
     fetchGoals,
+    createGoal,
     getProgress,
     getRemaining,
     getTargetLabel,

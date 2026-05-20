@@ -9,11 +9,11 @@ import { useTransactionModal } from "~/composable/transactions/useTransactionMod
 import { useToast } from "~/composable/useToast";
 import type { Goal } from "~/types/goals";
 
-const { fetchGoals, goals, loading, filters } = useGoals();
+const { fetchGoals, goals, loading, filters, error: goalError } = useGoals();
 
-const { error } = useTransactions();
+const { error: transactionError } = useTransactions();
 
-const { showToast } = useToast();
+const { showToast, watchError } = useToast();
 
 const { isModalOpen, openForContribution, closeModal } = useTransactionModal();
 
@@ -57,14 +57,8 @@ watch(
   { deep: true },
 );
 
-watch(error, (newError) => {
-  if (newError) {
-    showToast(newError, "error");
-    setTimeout(() => {
-      error.value = null;
-    }, 2000);
-  }
-});
+watchError(transactionError);
+watchError(goalError);
 </script>
 <template>
   <div class="space-y-6 pt-10">
@@ -93,7 +87,7 @@ watch(error, (newError) => {
       v-if="isGoalModalOpen"
       class="fixed inset-0 z-70 flex items-center justify-center bg-slate-900/50 p-4"
     >
-      <GoalsFormModal />
+      <GoalsFormModal @close="closeGoalModal" />
     </div>
   </div>
 </template>
